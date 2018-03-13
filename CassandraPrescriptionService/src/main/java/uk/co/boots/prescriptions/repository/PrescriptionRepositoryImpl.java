@@ -12,7 +12,7 @@ import org.springframework.data.cassandra.repository.query.CassandraEntityInform
 import org.springframework.data.cassandra.repository.support.SimpleCassandraRepository;
 
 import uk.co.boots.prescriptions.entity.PrescriptionByDateEntity;
-import uk.co.boots.prescriptions.entity.PrescriptionMappingService;
+import uk.co.boots.prescriptions.service.PrescriptionMappingService;
 
 public class PrescriptionRepositoryImpl extends SimpleCassandraRepository<PrescriptionByDateEntity, UUID> implements PrescriptionRepository{
 

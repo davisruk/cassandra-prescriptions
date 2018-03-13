@@ -12,18 +12,17 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import uk.co.boots.common.Address;
 import uk.co.boots.patient.dto.PatientDTO;
-import uk.co.boots.patient.entity.PatientByRegionEntity;
 import uk.co.boots.patient.service.PatientRepositoryService;
 import uk.co.boots.practice.entity.PracticeByRegionEntity;
 import uk.co.boots.practice.repository.PracticeByRegionRepository;
 import uk.co.boots.prescriber.entity.PrescriberByPracticeEntity;
 import uk.co.boots.prescriber.respository.PrescriberByPracticeRepository;
 import uk.co.boots.prescriptions.entity.PrescriptionByDateEntity;
-import uk.co.boots.prescriptions.entity.PrescriptionMappingService;
 import uk.co.boots.prescriptions.repository.PrescriptionByPatientRepository;
 import uk.co.boots.prescriptions.repository.PrescriptionByPrescriberRepository;
 import uk.co.boots.prescriptions.repository.PrescriptionByStoreRepository;
 import uk.co.boots.prescriptions.repository.PrescriptionRepository;
+import uk.co.boots.prescriptions.service.PrescriptionMappingService;
 import uk.co.boots.store.entity.StoreByRegionEntity;
 import uk.co.boots.store.repository.StoreByRegionRepository;
 
