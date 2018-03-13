@@ -1,0 +1,140 @@
+DROP KEYSPACE IF EXISTS prescriptions;
+CREATE KEYSPACE IF NOT EXISTS prescriptions WITH REPLICATION = {'class' : 'SimpleStrategy', 'replication_factor' : 1};
+
+DROP TABLE IF EXISTS prescriptions.patient_by_region;
+CREATE TABLE prescriptions.patient_by_region(
+  patient_id UUID,
+  patient_first_name TEXT,
+  patient_second_name TEXT,
+  patient_address_line1 TEXT,
+  patient_address_line2 TEXT,
+  patient_address_line3 TEXT,
+  patient_town TEXT,
+  patient_region TEXT,
+  patient_country TEXT,
+  patient_postCode TEXT,
+  last_interaction DATE,
+  PRIMARY KEY ((patient_region, patient_id), last_interaction, patient_second_name)
+ )
+ WITH CLUSTERING ORDER BY (last_interaction DESC, patient_second_name DESC);
+
+DROP TABLE IF EXISTS prescriptions.prescriber_by_practice;
+CREATE TABLE prescriptions.prescriber_by_practice(
+  prescriber_id UUID,
+  prescriber_first_name TEXT,
+  prescriber_second_name TEXT,
+  practice_id UUID,
+  practice_name TEXT,
+  practice_address_line1 TEXT,
+  practice_address_line2 TEXT,
+  practice_address_line3 TEXT,
+  practice_town TEXT,
+  practice_region TEXT,
+  practice_country TEXT,
+  practice_postCode TEXT,
+  PRIMARY KEY ((practice_id, prescriber_id), prescriber_second_name)
+ )
+ WITH CLUSTERING ORDER BY (prescriber_second_name ASC);
+
+DROP TABLE IF EXISTS prescriptions.practice_by_region;
+CREATE TABLE prescriptions.practice_by_region(
+  practice_id UUID,
+  practice_name TEXT,
+  practice_address_line1 TEXT,
+  practice_address_line2 TEXT,
+  practice_address_line3 TEXT,
+  practice_town TEXT,
+  practice_region TEXT,
+  practice_country TEXT,
+  practice_postCode TEXT,
+  PRIMARY KEY ((practice_region, practice_id), practice_name)
+ )
+ WITH CLUSTERING ORDER BY (practice_name ASC);
+
+DROP TABLE IF EXISTS prescriptions.store_by_region;
+CREATE TABLE prescriptions.store_by_region(
+  store_id UUID,
+  store_name TEXT,
+  store_address_line1 TEXT,
+  store_address_line2 TEXT,
+  store_address_line3 TEXT,
+  store_town TEXT,
+  store_region TEXT,
+  store_country TEXT,
+  store_postCode TEXT,
+  PRIMARY KEY ((store_region, store_id), store_name)
+ )
+ WITH CLUSTERING ORDER BY (store_name ASC);
+
+DROP TABLE IF EXISTS prescriptions.prescription_by_date;
+CREATE TABLE prescriptions.prescription_by_date(
+  id UUID,
+  store_id UUID,
+  store_name TEXT,
+  prescriber_id UUID,
+  prescriber_first_name TEXT,
+  prescriber_second_name TEXT,
+  prescriber_practice_id UUID,
+  prescriber_practice_name TEXT,
+  patient_id UUID,
+  patient_first_name TEXT,
+  patient_second_name TEXT,
+  prescription_date TIMESTAMP,
+  PRIMARY KEY ((prescription_date, id), store_id)
+ )
+ WITH CLUSTERING ORDER BY (store_id DESC);
+
+DROP TABLE IF EXISTS prescriptions.prescription_by_store;
+CREATE TABLE prescriptions.prescription_by_store(
+  id UUID,
+  store_id UUID,
+  store_name TEXT,
+  prescriber_id UUID,
+  prescriber_first_name TEXT,
+  prescriber_second_name TEXT,
+  prescriber_practice_id UUID,
+  prescriber_practice_name TEXT,
+  patient_id UUID,
+  patient_first_name TEXT,
+  patient_second_name TEXT,
+  prescription_date TIMESTAMP,
+  PRIMARY KEY ((store_id, id), prescription_date)
+ )
+ WITH CLUSTERING ORDER BY (prescription_date DESC);
+  
+DROP TABLE IF EXISTS prescriptions.prescription_by_patient;
+CREATE TABLE prescriptions.prescription_by_patient(
+  id  UUID,
+  store_id UUID,
+  store_name TEXT,
+  prescriber_id UUID,
+  prescriber_first_name TEXT,
+  prescriber_second_name TEXT,
+  prescriber_practice_id UUID,
+  prescriber_practice_name TEXT,
+  patient_id UUID,
+  patient_first_name TEXT,
+  patient_second_name TEXT,
+  prescription_date TIMESTAMP,
+  PRIMARY KEY ((patient_id, id), prescription_date)
+ )
+ WITH CLUSTERING ORDER BY (prescription_date DESC);
+  
+DROP TABLE IF EXISTS prescriptions.prescription_by_prescriber;
+CREATE TABLE prescriptions.prescription_by_prescriber(
+  id UUID,
+  store_id UUID,
+  store_name TEXT,
+  prescriber_id UUID,
+  prescriber_first_name TEXT,
+  prescriber_second_name TEXT,
+  prescriber_practice_id UUID,
+  prescriber_practice_name TEXT,
+  patient_id UUID,
+  patient_first_name TEXT,
+  patient_second_name TEXT,
+  prescription_date TIMESTAMP,
+  PRIMARY KEY ((prescriber_id, id), prescription_date)
+ )
+ WITH CLUSTERING ORDER BY (prescription_date DESC);
+ 
