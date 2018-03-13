@@ -29,5 +29,4 @@ bin/
 /gradlew
 /gradlew.bat
 /gradle.properties
-/settings.gradle
 /gradle/
