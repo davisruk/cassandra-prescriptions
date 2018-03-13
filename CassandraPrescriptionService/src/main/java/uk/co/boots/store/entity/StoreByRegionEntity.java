@@ -19,7 +19,7 @@ public class StoreByRegionEntity {
 	private String region;
 	@PrimaryKeyColumn(name="store_name", type=PrimaryKeyType.CLUSTERED)
 	private String storeName;
-	@Column("store_id")
+	@PrimaryKeyColumn(name="store_id", type=PrimaryKeyType.CLUSTERED)
 	private UUID storeId;
 	@Column("store_address_line1")
 	private String addressLine1;  

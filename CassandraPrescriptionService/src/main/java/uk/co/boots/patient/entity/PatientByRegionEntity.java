@@ -1,6 +1,6 @@
 package uk.co.boots.patient.entity;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.UUID;
 
 import org.springframework.data.cassandra.core.cql.PrimaryKeyType;
@@ -17,10 +17,10 @@ import lombok.Data;
 public class PatientByRegionEntity {
 	@PrimaryKeyColumn(name="patient_region", type=PrimaryKeyType.PARTITIONED)
 	private String region;
-	@PrimaryKeyColumn(name="patient_id", type=PrimaryKeyType.PARTITIONED)
+	@PrimaryKeyColumn(name="patient_id", type=PrimaryKeyType.CLUSTERED)
 	private UUID id;
 	@PrimaryKeyColumn(name="last_interaction", type=PrimaryKeyType.CLUSTERED)
-	private LocalDateTime lastInteraction;
+	private LocalDate lastInteraction;
 	@PrimaryKeyColumn(name="patient_second_name", type=PrimaryKeyType.CLUSTERED)
 	private String secondName;
 	@Column("patient_first_name")

@@ -21,7 +21,7 @@ public class PrescriptionByStoreEntity{
 	@PrimaryKeyColumn(name="prescription_date", type=PrimaryKeyType.CLUSTERED)
 	private LocalDateTime prescriptionDate;
 
-	@Column("id")
+	@PrimaryKeyColumn(name="id", type=PrimaryKeyType.CLUSTERED)
 	private UUID id;
 
 	@Column("store_name")

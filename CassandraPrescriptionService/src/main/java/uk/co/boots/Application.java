@@ -10,6 +10,12 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
+import uk.co.boots.patient.entity.PatientByRegionEntity;
+import uk.co.boots.patient.repository.PatientByRegionRepository;
+import uk.co.boots.practice.entity.PracticeByRegionEntity;
+import uk.co.boots.practice.repository.PracticeByRegionRepository;
+import uk.co.boots.prescriber.entity.PrescriberByPracticeEntity;
+import uk.co.boots.prescriber.respository.PrescriberByPracticeRepository;
 import uk.co.boots.prescriptions.entity.PrescriptionByDateEntity;
 import uk.co.boots.prescriptions.entity.PrescriptionMappingService;
 import uk.co.boots.prescriptions.repository.PrescriptionByPatientRepository;
@@ -34,6 +40,13 @@ public class Application implements CommandLineRunner{
 	PrescriptionMappingService mapper;
 	@Autowired
 	StoreByRegionRepository storeRepo;
+	@Autowired
+	PracticeByRegionRepository practiceRepo;
+	@Autowired
+	PatientByRegionRepository patientRepo;
+	@Autowired
+	PrescriberByPracticeRepository prescriberRepo;
+	
 	
 	public static void main (final String args[]) {
 		SpringApplication.run(Application.class, args);
@@ -41,13 +54,94 @@ public class Application implements CommandLineRunner{
 	
 	@Override
 	public void run(String... args) throws Exception {
-		UUID patientId_a = UUID.randomUUID();
-		UUID prescriberId_a = UUID.randomUUID();
-		UUID prescriberPracticeId = UUID.randomUUID();
-		UUID patientId_b = UUID.randomUUID();
-		UUID prescriberId_b = UUID.randomUUID();
-		UUID prescriberPracticeId_b = UUID.randomUUID();
-		UUID prescriberId_c = UUID.randomUUID();
+		
+		PracticeByRegionEntity practice1 = PracticeByRegionEntity.builder()
+				.addressLine1("39 Linkfield Road")
+				.practiceName("Charnwood Surgery")
+				.postCode("LE12 7DJ")
+				.addressLine2("Mountsorrel")
+				.town("Loughborough")
+				.region("Leicestershire")
+				.country("UK")
+				.id(UUID.randomUUID())
+				.build();
+		
+		practiceRepo.save(practice1);
+		
+		PracticeByRegionEntity practice2 = PracticeByRegionEntity.builder()
+				.addressLine1("86 Rothley Road")
+				.practiceName("Alpine House Surgery")
+				.postCode("LE12 7JU")
+				.addressLine2("Mountsorrel")
+				.town("Loughborough")
+				.region("Leicestershire")
+				.country("UK")
+				.id(UUID.randomUUID())
+				.build();
+		
+		practiceRepo.save(practice2);
+		
+		PrescriberByPracticeEntity prescriber1 = PrescriberByPracticeEntity.builder()
+				.addressLine1(practice2.getAddressLine1())
+				.practiceName(practice2.getAddressLine2())
+				.postCode(practice2.getPostCode())
+				.addressLine2(practice2.getAddressLine2())
+				.town(practice2.getTown())
+				.region(practice2.getRegion())
+				.country(practice2.getCountry())
+				.firstName("Dr Hannibal")
+				.secondName("Lector")
+				.practiceId(practice2.getId())
+				.id(UUID.randomUUID())
+				.build();
+
+		prescriberRepo.save(prescriber1);
+		
+		PrescriberByPracticeEntity prescriber2 = PrescriberByPracticeEntity.builder()
+				.addressLine1(practice1.getAddressLine1())
+				.practiceName(practice1.getAddressLine2())
+				.postCode(practice1.getPostCode())
+				.addressLine2(practice1.getAddressLine2())
+				.town(practice1.getTown())
+				.region(practice1.getRegion())
+				.country(practice1.getCountry())
+				.firstName("Dr R K")
+				.secondName("Hirani")
+				.practiceId(practice1.getId())
+				.id(UUID.randomUUID())
+				.build();
+
+		prescriberRepo.save(prescriber2);
+		
+		PatientByRegionEntity p1 = PatientByRegionEntity.builder()
+				.addressLine1("8 Pott Acre")
+				.addressLine2("Rothley")
+				.country("UK")
+				.region("Leicestershire")
+				.town("Leicester")
+				.firstName("Richard")
+				.secondName("Davis")
+				.postCode("LE7 7LT")
+				.id(UUID.randomUUID())
+				.lastInteraction(LocalDate.of(2016, 03, 15))
+				.build();
+		
+		patientRepo.save(p1);
+		
+		PatientByRegionEntity p2 = PatientByRegionEntity.builder()
+				.addressLine1("8 Pott Acre")
+				.addressLine2("Rothley")
+				.country("UK")
+				.region("Leicestershire")
+				.town("Leicester")
+				.firstName("Merle")
+				.secondName("Davis")
+				.postCode("LE7 7LT")
+				.id(UUID.randomUUID())
+				.lastInteraction(LocalDate.of(2017, 07, 30))
+				.build();
+
+		patientRepo.save(p2);
 		
 		StoreByRegionEntity store1 = StoreByRegionEntity.builder()
 				.storeId(UUID.randomUUID())
@@ -74,61 +168,61 @@ public class Application implements CommandLineRunner{
 		
 		PrescriptionByDateEntity e1 = PrescriptionByDateEntity.builder()
 				.id(UUID.randomUUID())
-				.patientId(patientId_a)
-				.patientFirstName("Richard")
-				.patientSecondName("Davis")
+				.patientId(p1.getId())
+				.patientFirstName(p1.getFirstName())
+				.patientSecondName(p1.getSecondName())
 				.storeId(store1.getStoreId())
 				.storeName(store1.getStoreName())
-				.prescriberId(prescriberId_a)
-				.prescriberFirstName("Joe")
-				.prescriberSecondName("Bloggs")
-				.prescriberPracticeId(prescriberPracticeId)
-				.prescriberPracticeName("Charnwood Surgery")
+				.prescriberId(prescriber1.getId())
+				.prescriberFirstName(prescriber1.getFirstName())
+				.prescriberSecondName(prescriber1.getSecondName())
+				.prescriberPracticeId(prescriber1.getPracticeId())
+				.prescriberPracticeName(prescriber1.getPracticeName())
 				.prescriptionDate(LocalDateTime.now())
 				.build();
 		
 		PrescriptionByDateEntity e2 = PrescriptionByDateEntity.builder()
 				.id(UUID.randomUUID())
-				.patientId(patientId_a)
-				.patientFirstName("Richard")
-				.patientSecondName("Davis")
+				.patientId(p1.getId())
+				.patientFirstName(p1.getFirstName())
+				.patientSecondName(p1.getSecondName())
 				.storeId(store2.getStoreId())
 				.storeName(store2.getStoreName())
-				.prescriberId(prescriberId_a)
-				.prescriberFirstName("Joe")
-				.prescriberSecondName("Bloggs")
-				.prescriberPracticeId(prescriberPracticeId)
-				.prescriberPracticeName("Charnwood Surgery")
+				.prescriberId(prescriber1.getId())
+				.prescriberFirstName(prescriber1.getFirstName())
+				.prescriberSecondName(prescriber1.getSecondName())
+				.prescriberPracticeId(prescriber1.getPracticeId())
+				.prescriberPracticeName(prescriber1.getPracticeName())
 				.prescriptionDate(LocalDateTime.of(2013, 8, 30, 15, 30))
 				.build();
 
 		PrescriptionByDateEntity e3 = PrescriptionByDateEntity.builder()
 				.id(UUID.randomUUID())
-				.patientId(patientId_b)
-				.patientFirstName("Merle")
-				.patientSecondName("Davis")
+				.patientId(p2.getId())
+				.patientFirstName(p2.getFirstName())
+				.patientSecondName(p2.getSecondName())
 				.storeId(store2.getStoreId())
 				.storeName(store2.getStoreName())
-				.prescriberId(prescriberId_b)
-				.prescriberFirstName("A.N")
-				.prescriberSecondName("Other")
-				.prescriberPracticeId(prescriberPracticeId)
-				.prescriberPracticeName("Charnwood Surgery")
+				.prescriberId(prescriber2.getId())
+				.prescriberFirstName(prescriber2.getFirstName())
+				.prescriberSecondName(prescriber2.getSecondName())
+				.prescriberPracticeId(prescriber2.getPracticeId())
+				.prescriberPracticeName(prescriber2.getPracticeName())
 				.prescriptionDate(LocalDateTime.now())
 				.build();
 		
 		PrescriptionByDateEntity e4 = PrescriptionByDateEntity.builder()
 				.id(UUID.randomUUID())
-				.patientId(patientId_b)
-				.patientFirstName("Merle")
-				.patientSecondName("Davis")
+				.patientId(p2.getId())
+				.patientFirstName(p2.getFirstName())
+				.patientSecondName(p2.getSecondName())
 				.storeId(store2.getStoreId())
 				.storeName(store2.getStoreName())
-				.prescriberId(prescriberId_c)
-				.prescriberFirstName("Doctor")
-				.prescriberSecondName("Foster")
-				.prescriberPracticeId(prescriberPracticeId_b)
-				.prescriberPracticeName("Loughborough Walkin")
+				.prescriberId(prescriber1.getId())
+				.prescriberFirstName(prescriber1.getFirstName())
+				.prescriberSecondName(prescriber1.getSecondName())
+				.prescriberPracticeId(prescriber1.getPracticeId())
+				.prescriberPracticeName(prescriber1.getPracticeName())
 				.prescriptionDate(LocalDateTime.now())
 				.build();
 		
@@ -150,6 +244,12 @@ public class Application implements CommandLineRunner{
 		pr.delete(e2);
 		pr.delete(e3);
 		pr.delete(e4);
+		patientRepo.delete(p1);
+		patientRepo.delete(p2);
+		prescriberRepo.delete(prescriber1);
+		prescriberRepo.delete(prescriber2);
+		practiceRepo.delete(practice1);
+		practiceRepo.delete(practice2);
 		storeRepo.delete(store2);
 		storeRepo.delete(store1);
 	}

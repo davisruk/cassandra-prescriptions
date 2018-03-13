@@ -20,14 +20,14 @@ public class PrescriptionByDateEntity {
 
 	@PrimaryKeyColumn(name="store_id", type=PrimaryKeyType.CLUSTERED)
 	private UUID storeId;
-
-	@Column("id")
+	
+	@PrimaryKeyColumn(name="id", type=PrimaryKeyType.CLUSTERED)
 	private UUID id;
 
 	@Column("store_name")
 	private String storeName;
 	
-	@PrimaryKeyColumn("prescriber_id")
+	@Column("prescriber_id")
 	private UUID prescriberId;
 	
 	@Column("prescriber_first_name")

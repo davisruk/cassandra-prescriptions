@@ -18,7 +18,7 @@ public class PrescriberByPracticeEntity {
 	private UUID practiceId;
 	@PrimaryKeyColumn(name="prescriber_second_name", type=PrimaryKeyType.CLUSTERED)
 	private String secondName;
-	@Column("prescriber_id")
+	@PrimaryKeyColumn(name="prescriber_id", type=PrimaryKeyType.CLUSTERED)	
 	private UUID id;
 	@Column("prescriber_first_name")
 	private String firstName;

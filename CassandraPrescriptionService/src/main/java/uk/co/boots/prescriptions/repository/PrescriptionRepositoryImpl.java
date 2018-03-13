@@ -89,16 +89,15 @@ public class PrescriptionRepositoryImpl extends SimpleCassandraRepository<Prescr
 	
 	
 	private void deleteByStore(PrescriptionByDateEntity p, CassandraBatchOperations batchOps) {
-		batchOps.delete(byStoreRepo.findByStoreIdAndId(p.getStoreId(), p.getId()));
-				
+		batchOps.delete(byStoreRepo.findByStoreIdAndPrescriptionDateAndId(p.getStoreId(), p.getPrescriptionDate(),p.getId()));
 	}
 
 	private void deleteByPatient(PrescriptionByDateEntity p, CassandraBatchOperations batchOps) {
-		batchOps.delete(byPatientRepo.findById(p.getPatientId()));
+		batchOps.delete(byPatientRepo.findByPatientIdAndPrescriptionDateAndId(p.getPatientId(), p.getPrescriptionDate(), p.getId()));
 	}
 
 	private void deleteByPrescriber(PrescriptionByDateEntity p, CassandraBatchOperations batchOps) {
-		batchOps.delete(byPrescriberRepo.findById(p.getPrescriberId()));
+		batchOps.delete(byPrescriberRepo.findByPrescriberIdAndPrescriptionDateAndId(p.getPrescriberId(), p.getPrescriptionDate(),p.getId()));
 	}
 
 	private void insertByStore(PrescriptionByDateEntity p, CassandraBatchOperations batchOps) {

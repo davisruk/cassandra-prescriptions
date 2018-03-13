@@ -18,7 +18,7 @@ public class PracticeByRegionEntity {
 	private String region;
 	@PrimaryKeyColumn(name="practice_name", type=PrimaryKeyType.CLUSTERED)
 	private String practiceName;
-	@Column("practice_id")
+	@PrimaryKeyColumn(name="practice_id", type=PrimaryKeyType.CLUSTERED)
 	private UUID id;
 	@Column("practice_address_line1")
 	private String addressLine1;

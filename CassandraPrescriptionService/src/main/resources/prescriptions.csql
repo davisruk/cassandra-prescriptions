@@ -14,7 +14,7 @@ CREATE TABLE prescriptions.patient_by_region(
   patient_country TEXT,
   patient_postCode TEXT,
   last_interaction DATE,
-  PRIMARY KEY ((patient_region, patient_id), last_interaction, patient_second_name)
+  PRIMARY KEY ((patient_region), last_interaction, patient_second_name, patient_id)
  )
  WITH CLUSTERING ORDER BY (last_interaction DESC, patient_second_name DESC);
 
@@ -32,7 +32,7 @@ CREATE TABLE prescriptions.prescriber_by_practice(
   practice_region TEXT,
   practice_country TEXT,
   practice_postCode TEXT,
-  PRIMARY KEY ((practice_id, prescriber_id), prescriber_second_name)
+  PRIMARY KEY ((practice_id), prescriber_second_name, prescriber_id)
  )
  WITH CLUSTERING ORDER BY (prescriber_second_name ASC);
 
@@ -47,7 +47,7 @@ CREATE TABLE prescriptions.practice_by_region(
   practice_region TEXT,
   practice_country TEXT,
   practice_postCode TEXT,
-  PRIMARY KEY ((practice_region, practice_id), practice_name)
+  PRIMARY KEY ((practice_region), practice_name, practice_id)
  )
  WITH CLUSTERING ORDER BY (practice_name ASC);
 
@@ -62,7 +62,7 @@ CREATE TABLE prescriptions.store_by_region(
   store_region TEXT,
   store_country TEXT,
   store_postCode TEXT,
-  PRIMARY KEY ((store_region, store_id), store_name)
+  PRIMARY KEY ((store_region), store_name, store_id)
  )
  WITH CLUSTERING ORDER BY (store_name ASC);
 
@@ -80,7 +80,7 @@ CREATE TABLE prescriptions.prescription_by_date(
   patient_first_name TEXT,
   patient_second_name TEXT,
   prescription_date TIMESTAMP,
-  PRIMARY KEY ((prescription_date, id), store_id)
+  PRIMARY KEY ((prescription_date), store_id, id)
  )
  WITH CLUSTERING ORDER BY (store_id DESC);
 
@@ -98,7 +98,7 @@ CREATE TABLE prescriptions.prescription_by_store(
   patient_first_name TEXT,
   patient_second_name TEXT,
   prescription_date TIMESTAMP,
-  PRIMARY KEY ((store_id, id), prescription_date)
+  PRIMARY KEY ((store_id), prescription_date, id)
  )
  WITH CLUSTERING ORDER BY (prescription_date DESC);
   
@@ -116,7 +116,7 @@ CREATE TABLE prescriptions.prescription_by_patient(
   patient_first_name TEXT,
   patient_second_name TEXT,
   prescription_date TIMESTAMP,
-  PRIMARY KEY ((patient_id, id), prescription_date)
+  PRIMARY KEY ((patient_id), prescription_date, id)
  )
  WITH CLUSTERING ORDER BY (prescription_date DESC);
   
@@ -134,7 +134,7 @@ CREATE TABLE prescriptions.prescription_by_prescriber(
   patient_first_name TEXT,
   patient_second_name TEXT,
   prescription_date TIMESTAMP,
-  PRIMARY KEY ((prescriber_id, id), prescription_date)
+  PRIMARY KEY ((prescriber_id), prescription_date, id)
  )
  WITH CLUSTERING ORDER BY (prescription_date DESC);
  
