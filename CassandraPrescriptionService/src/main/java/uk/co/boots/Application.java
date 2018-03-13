@@ -10,8 +10,10 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
+import uk.co.boots.common.Address;
+import uk.co.boots.patient.dto.PatientDTO;
 import uk.co.boots.patient.entity.PatientByRegionEntity;
-import uk.co.boots.patient.repository.PatientByRegionRepository;
+import uk.co.boots.patient.service.PatientRepositoryService;
 import uk.co.boots.practice.entity.PracticeByRegionEntity;
 import uk.co.boots.practice.repository.PracticeByRegionRepository;
 import uk.co.boots.prescriber.entity.PrescriberByPracticeEntity;
@@ -43,10 +45,9 @@ public class Application implements CommandLineRunner{
 	@Autowired
 	PracticeByRegionRepository practiceRepo;
 	@Autowired
-	PatientByRegionRepository patientRepo;
-	@Autowired
 	PrescriberByPracticeRepository prescriberRepo;
-	
+	@Autowired
+	PatientRepositoryService patientService;
 	
 	public static void main (final String args[]) {
 		SpringApplication.run(Application.class, args);
@@ -113,36 +114,45 @@ public class Application implements CommandLineRunner{
 
 		prescriberRepo.save(prescriber2);
 		
-		PatientByRegionEntity p1 = PatientByRegionEntity.builder()
-				.addressLine1("8 Pott Acre")
-				.addressLine2("Rothley")
-				.country("UK")
-				.region("Leicestershire")
-				.town("Leicester")
+		PatientDTO p1 = PatientDTO.builder()
+				.id(UUID.randomUUID())
 				.firstName("Richard")
 				.secondName("Davis")
-				.postCode("LE7 7LT")
-				.id(UUID.randomUUID())
 				.lastInteraction(LocalDate.of(2016, 03, 15))
-				.build();
-		
-		patientRepo.save(p1);
-		
-		PatientByRegionEntity p2 = PatientByRegionEntity.builder()
-				.addressLine1("8 Pott Acre")
-				.addressLine2("Rothley")
-				.country("UK")
-				.region("Leicestershire")
-				.town("Leicester")
-				.firstName("Merle")
-				.secondName("Davis")
-				.postCode("LE7 7LT")
-				.id(UUID.randomUUID())
-				.lastInteraction(LocalDate.of(2017, 07, 30))
+				.address(Address.builder()
+						.addressLine1("8 Pott Acre")
+						.addressLine2("Rothley")
+						.country("UK")
+						.region("Leicestershire")
+						.town("Leicester")
+						.postCode("LE7 7LT")
+						.build()
+				)
 				.build();
 
-		patientRepo.save(p2);
+		patientService.save(p1);
 		
+		PatientDTO p2 = PatientDTO.builder()
+				.id(UUID.randomUUID())
+				.firstName("Merle")
+				.secondName("Davis")
+				.lastInteraction(LocalDate.of(2017, 07, 30))
+				.address(Address.builder()
+						.addressLine1("8 Pott Acre")
+						.addressLine2("Rothley")
+						.country("UK")
+						.region("Leicestershire")
+						.town("Leicester")
+						.postCode("LE7 7LT")
+						.build()
+				)
+				.build();
+
+		patientService.save(p2);
+		
+		System.out.println("All Patients in Leicestershire");
+		patientService.getAllPatientsForRegion("Leicestershire").forEach(System.out::println);
+
 		StoreByRegionEntity store1 = StoreByRegionEntity.builder()
 				.storeId(UUID.randomUUID())
 				.region("Leicestershire")
@@ -244,8 +254,8 @@ public class Application implements CommandLineRunner{
 		pr.delete(e2);
 		pr.delete(e3);
 		pr.delete(e4);
-		patientRepo.delete(p1);
-		patientRepo.delete(p2);
+		patientService.delete(p1);
+		patientService.delete(p2);
 		prescriberRepo.delete(prescriber1);
 		prescriberRepo.delete(prescriber2);
 		practiceRepo.delete(practice1);
