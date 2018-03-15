@@ -1,10 +1,10 @@
-package uk.co.boots.prescriptions.service;
+package uk.co.boots.prescription.service;
 import org.springframework.stereotype.Service;
 
-import uk.co.boots.prescriptions.entity.PrescriptionByDateEntity;
-import uk.co.boots.prescriptions.entity.PrescriptionByPatientEntity;
-import uk.co.boots.prescriptions.entity.PrescriptionByPrescriberEntity;
-import uk.co.boots.prescriptions.entity.PrescriptionByStoreEntity;
+import uk.co.boots.prescription.entity.PrescriptionByDateEntity;
+import uk.co.boots.prescription.entity.PrescriptionByPatientEntity;
+import uk.co.boots.prescription.entity.PrescriptionByPrescriberEntity;
+import uk.co.boots.prescription.entity.PrescriptionByStoreEntity;
 
 @Service
 public class PrescriptionMappingService {

@@ -15,9 +15,9 @@ import org.springframework.data.cassandra.repository.query.CassandraEntityInform
 import org.springframework.data.cassandra.repository.support.MappingCassandraEntityInformation;
 
 import lombok.Getter;
-import uk.co.boots.prescriptions.entity.PrescriptionByDateEntity;
-import uk.co.boots.prescriptions.repository.PrescriptionRepository;
-import uk.co.boots.prescriptions.repository.PrescriptionRepositoryImpl;
+import uk.co.boots.prescription.entity.PrescriptionByDateEntity;
+import uk.co.boots.prescription.repository.PrescriptionRepository;
+import uk.co.boots.prescription.repository.PrescriptionRepositoryImpl;
 
 @Getter
 @Configuration
@@ -51,6 +51,21 @@ public class CassandraConfig extends AbstractCassandraConfiguration {
 																	);
 		return new PrescriptionRepositoryImpl(metadata, cassandraTemplate);
 	}
+	
+/*
+	@Bean
+	public PracticeByPrescriberRepository practiceByPrescriberRepo(CassandraTemplate cassandraTemplate) {
+		CassandraPersistentEntity<?> entity = cassandraTemplate
+												.getConverter()
+												.getMappingContext()
+												.getRequiredPersistentEntity(PracticeByPrescriberEntity.class);
+		CassandraEntityInformation<PracticeByPrescriberEntity, UUID> metadata = new MappingCassandraEntityInformation<>(
+																	(CassandraPersistentEntity<PracticeByPrescriberEntity>) entity,
+																	cassandraTemplate.getConverter()
+																	);
+		return new PracticeByPrescriberRepositoryImpl(metadata, cassandraTemplate);
+	}
+*/
 	private static final Logger log = Logger.getLogger(CassandraConfig.class.getName());
 
 	

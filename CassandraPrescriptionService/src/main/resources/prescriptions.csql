@@ -6,6 +6,7 @@ CREATE TABLE prescriptions.patient_by_region(
   patient_id UUID,
   patient_first_name TEXT,
   patient_second_name TEXT,
+  patient_code MAP<TEXT,TEXT>,
   patient_address_line1 TEXT,
   patient_address_line2 TEXT,
   patient_address_line3 TEXT,
@@ -17,12 +18,14 @@ CREATE TABLE prescriptions.patient_by_region(
   PRIMARY KEY ((patient_region), last_interaction, patient_second_name, patient_id)
  )
  WITH CLUSTERING ORDER BY (last_interaction DESC, patient_second_name DESC);
+ CREATE INDEX patient_code_idx ON prescriptions.patient_by_region (ENTRIES(patient_code));
 
-DROP TABLE IF EXISTS prescriptions.prescriber_by_practice;
-CREATE TABLE prescriptions.prescriber_by_practice(
+DROP TABLE IF EXISTS prescriptions.practice_by_prescriber;
+CREATE TABLE prescriptions.practice_by_prescriber(
   prescriber_id UUID,
   prescriber_first_name TEXT,
   prescriber_second_name TEXT,
+  prescriber_code MAP<TEXT,TEXT>,
   practice_id UUID,
   practice_name TEXT,
   practice_address_line1 TEXT,
@@ -32,6 +35,27 @@ CREATE TABLE prescriptions.prescriber_by_practice(
   practice_region TEXT,
   practice_country TEXT,
   practice_postCode TEXT,
+  practice_code MAP<TEXT,TEXT>,
+  PRIMARY KEY ((prescriber_id), practice_name, practice_id)
+ )
+ WITH CLUSTERING ORDER BY (practice_name ASC);
+
+DROP TABLE IF EXISTS prescriptions.prescriber_by_practice;
+CREATE TABLE prescriptions.prescriber_by_practice(
+  prescriber_id UUID,
+  prescriber_first_name TEXT,
+  prescriber_second_name TEXT,
+  prescriber_code MAP<TEXT,TEXT>,
+  practice_id UUID,
+  practice_name TEXT,
+  practice_address_line1 TEXT,
+  practice_address_line2 TEXT,
+  practice_address_line3 TEXT,
+  practice_town TEXT,
+  practice_region TEXT,
+  practice_country TEXT,
+  practice_postCode TEXT,
+  practice_code MAP<TEXT,TEXT>,
   PRIMARY KEY ((practice_id), prescriber_second_name, prescriber_id)
  )
  WITH CLUSTERING ORDER BY (prescriber_second_name ASC);
@@ -40,6 +64,7 @@ DROP TABLE IF EXISTS prescriptions.practice_by_region;
 CREATE TABLE prescriptions.practice_by_region(
   practice_id UUID,
   practice_name TEXT,
+  practice_code MAP<TEXT,TEXT>,
   practice_address_line1 TEXT,
   practice_address_line2 TEXT,
   practice_address_line3 TEXT,
@@ -50,6 +75,7 @@ CREATE TABLE prescriptions.practice_by_region(
   PRIMARY KEY ((practice_region), practice_name, practice_id)
  )
  WITH CLUSTERING ORDER BY (practice_name ASC);
+CREATE INDEX practice_code_idx ON prescriptions.practice_by_region (ENTRIES(practice_code));
 
 DROP TABLE IF EXISTS prescriptions.store_by_region;
 CREATE TABLE prescriptions.store_by_region(

@@ -1,4 +1,4 @@
-package uk.co.boots.prescriptions.repository;
+package uk.co.boots.prescription.repository;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,8 +11,8 @@ import org.springframework.data.cassandra.core.CassandraTemplate;
 import org.springframework.data.cassandra.repository.query.CassandraEntityInformation;
 import org.springframework.data.cassandra.repository.support.SimpleCassandraRepository;
 
-import uk.co.boots.prescriptions.entity.PrescriptionByDateEntity;
-import uk.co.boots.prescriptions.service.PrescriptionMappingService;
+import uk.co.boots.prescription.entity.PrescriptionByDateEntity;
+import uk.co.boots.prescription.service.PrescriptionMappingService;
 
 public class PrescriptionRepositoryImpl extends SimpleCassandraRepository<PrescriptionByDateEntity, UUID> implements PrescriptionRepository{
 

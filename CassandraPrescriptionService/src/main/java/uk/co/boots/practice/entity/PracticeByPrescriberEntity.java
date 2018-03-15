@@ -1,4 +1,4 @@
-package uk.co.boots.prescriber.entity;
+package uk.co.boots.practice.entity;
 
 import java.util.Map;
 import java.util.UUID;
@@ -11,20 +11,23 @@ import org.springframework.data.cassandra.core.mapping.Table;
 import lombok.Builder;
 import lombok.Data;
 
+/* 
+ * All practices for a prescriber
+ */
 @Data
 @Builder
-@Table ("prescriber_by_practice")
-public class PrescriberByPracticeEntity {
-	@PrimaryKeyColumn(name="practice_id", type=PrimaryKeyType.PARTITIONED)	
-	private UUID practiceId;
-	@PrimaryKeyColumn(name="prescriber_second_name", type=PrimaryKeyType.CLUSTERED)
-	private String secondName;
-	@PrimaryKeyColumn(name="prescriber_id", type=PrimaryKeyType.CLUSTERED)	
+@Table ("practice_by_prescriber")
+public class PracticeByPrescriberEntity {
+	@PrimaryKeyColumn(name="prescriber_id", type=PrimaryKeyType.PARTITIONED)
 	private UUID prescriberId;
+	@PrimaryKeyColumn(name="practice_id", type=PrimaryKeyType.CLUSTERED)
+	private UUID practiceId;
+	@PrimaryKeyColumn(name="practice_name", type=PrimaryKeyType.CLUSTERED)
+	private String practiceName;
 	@Column("prescriber_first_name")
 	private String firstName;
-	@Column("practice_name")
-	private String practiceName;
+	@Column("prescriber_second_name")
+	private String secondName;
 	@Column("practice_address_line1")
 	private String addressLine1;
 	@Column("practice_address_line2")
@@ -43,5 +46,5 @@ public class PrescriberByPracticeEntity {
 	private Map<String, String> prescriberCodes;
 	@Column ("practice_code")
 	private Map<String, String> practiceCodes;
-	
+
 }

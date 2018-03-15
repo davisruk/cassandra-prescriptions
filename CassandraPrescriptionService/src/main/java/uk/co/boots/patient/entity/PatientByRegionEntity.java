@@ -1,6 +1,7 @@
 package uk.co.boots.patient.entity;
 
 import java.time.LocalDate;
+import java.util.Map;
 import java.util.UUID;
 
 import org.springframework.data.cassandra.core.cql.PrimaryKeyType;
@@ -37,4 +38,6 @@ public class PatientByRegionEntity {
 	private String country;
 	@Column("patient_postCode")
 	private String postCode;
+	@Column ("patient_code")
+	private Map<String, String> codes;
 }

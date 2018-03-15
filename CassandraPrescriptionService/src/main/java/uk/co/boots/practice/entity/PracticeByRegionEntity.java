@@ -1,5 +1,6 @@
 package uk.co.boots.practice.entity;
 
+import java.util.Map;
 import java.util.UUID;
 
 import org.springframework.data.cassandra.core.cql.PrimaryKeyType;
@@ -10,6 +11,9 @@ import org.springframework.data.cassandra.core.mapping.Table;
 import lombok.Builder;
 import lombok.Data;
 
+/*
+ * All practices for a region
+ */
 @Data
 @Builder
 @Table("practice_by_region")
@@ -32,5 +36,6 @@ public class PracticeByRegionEntity {
 	private String country;
 	@Column("practice_postCode")
 	private String postCode;
-	
+	@Column ("practice_code")
+	private Map<String, String> codes;
 }

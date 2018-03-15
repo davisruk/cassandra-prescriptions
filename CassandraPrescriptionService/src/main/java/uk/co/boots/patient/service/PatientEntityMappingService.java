@@ -25,6 +25,7 @@ public class PatientEntityMappingService {
 				.town(dto.getAddress().getTown())
 				.postCode(dto.getAddress().getPostCode())
 				.country(dto.getAddress().getCountry())
+				.codes(dto.getCodes())
 				.build();
 	}
 	
@@ -44,6 +45,7 @@ public class PatientEntityMappingService {
 						.town(entity.getTown())
 						.country(entity.getCountry())
 						.build())
+				.codes(entity.getCodes())
 				.build();
 	}
 	

@@ -3,6 +3,8 @@ package uk.co.boots;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,16 +15,18 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import uk.co.boots.common.Address;
 import uk.co.boots.patient.dto.PatientDTO;
 import uk.co.boots.patient.service.PatientRepositoryService;
-import uk.co.boots.practice.entity.PracticeByRegionEntity;
-import uk.co.boots.practice.repository.PracticeByRegionRepository;
+import uk.co.boots.practice.dto.PracticeDTO;
+import uk.co.boots.practice.service.PracticeRepositoryService;
+import uk.co.boots.prescriber.dto.PrescriberDTO;
 import uk.co.boots.prescriber.entity.PrescriberByPracticeEntity;
 import uk.co.boots.prescriber.respository.PrescriberByPracticeRepository;
-import uk.co.boots.prescriptions.entity.PrescriptionByDateEntity;
-import uk.co.boots.prescriptions.repository.PrescriptionByPatientRepository;
-import uk.co.boots.prescriptions.repository.PrescriptionByPrescriberRepository;
-import uk.co.boots.prescriptions.repository.PrescriptionByStoreRepository;
-import uk.co.boots.prescriptions.repository.PrescriptionRepository;
-import uk.co.boots.prescriptions.service.PrescriptionMappingService;
+import uk.co.boots.prescriber.service.PrescriberRepositoryService;
+import uk.co.boots.prescription.entity.PrescriptionByDateEntity;
+import uk.co.boots.prescription.repository.PrescriptionByPatientRepository;
+import uk.co.boots.prescription.repository.PrescriptionByPrescriberRepository;
+import uk.co.boots.prescription.repository.PrescriptionByStoreRepository;
+import uk.co.boots.prescription.repository.PrescriptionRepository;
+import uk.co.boots.prescription.service.PrescriptionMappingService;
 import uk.co.boots.store.entity.StoreByRegionEntity;
 import uk.co.boots.store.repository.StoreByRegionRepository;
 
@@ -42,11 +46,11 @@ public class Application implements CommandLineRunner{
 	@Autowired
 	StoreByRegionRepository storeRepo;
 	@Autowired
-	PracticeByRegionRepository practiceRepo;
-	@Autowired
-	PrescriberByPracticeRepository prescriberRepo;
+	PracticeRepositoryService practiceService;
 	@Autowired
 	PatientRepositoryService patientService;
+	@Autowired
+	PrescriberRepositoryService prescriberRepoService;
 	
 	public static void main (final String args[]) {
 		SpringApplication.run(Application.class, args);
@@ -55,64 +59,90 @@ public class Application implements CommandLineRunner{
 	@Override
 	public void run(String... args) throws Exception {
 		
-		PracticeByRegionEntity practice1 = PracticeByRegionEntity.builder()
-				.addressLine1("39 Linkfield Road")
+		Map<String, String> practice1Codes = new HashMap<String, String>();
+		practice1Codes.put("GMC", "12345678");
+		practice1Codes.put("ODS", "AB897982");
+		practice1Codes.put("SDS", "938035766436");
+
+		PracticeDTO practice1 = PracticeDTO.builder()
+				.id(UUID.randomUUID())
 				.practiceName("Charnwood Surgery")
-				.postCode("LE12 7DJ")
-				.addressLine2("Mountsorrel")
-				.town("Loughborough")
-				.region("Leicestershire")
-				.country("UK")
-				.id(UUID.randomUUID())
+				.codes(practice1Codes)
+				.address(Address.builder()
+						.addressLine1("39 Linkfield Road")
+						.postCode("LE12 7DJ")
+						.addressLine2("Mountsorrel")
+						.town("Loughborough")
+						.region("Leicestershire")
+						.country("UK")
+						.build())
 				.build();
 		
-		practiceRepo.save(practice1);
+		practiceService.save(practice1);
 		
-		PracticeByRegionEntity practice2 = PracticeByRegionEntity.builder()
-				.addressLine1("86 Rothley Road")
+		Map<String, String> practice2Codes = new HashMap<String, String>();
+		practice2Codes.put("GMC", "98324739");
+		practice2Codes.put("ODS", "JH543543");
+		practice2Codes.put("SDS", "437637387856");
+
+		PracticeDTO practice2 = PracticeDTO.builder()
+				.id(UUID.randomUUID())
 				.practiceName("Alpine House Surgery")
-				.postCode("LE12 7JU")
-				.addressLine2("Mountsorrel")
-				.town("Loughborough")
-				.region("Leicestershire")
-				.country("UK")
-				.id(UUID.randomUUID())
-				.build();
-		
-		practiceRepo.save(practice2);
-		
-		PrescriberByPracticeEntity prescriber1 = PrescriberByPracticeEntity.builder()
-				.addressLine1(practice2.getAddressLine1())
-				.practiceName(practice2.getAddressLine2())
-				.postCode(practice2.getPostCode())
-				.addressLine2(practice2.getAddressLine2())
-				.town(practice2.getTown())
-				.region(practice2.getRegion())
-				.country(practice2.getCountry())
-				.firstName("Dr Hannibal")
-				.secondName("Lector")
-				.practiceId(practice2.getId())
-				.id(UUID.randomUUID())
+				.codes(practice2Codes)
+				.address(Address.builder()
+						.addressLine1("86 Rothley Road")
+						.postCode("LE12 7JU")
+						.addressLine2("Mountsorrel")
+						.town("Loughborough")
+						.region("Leicestershire")
+						.country("UK")
+						.build())
 				.build();
 
-		prescriberRepo.save(prescriber1);
+		practiceService.save(practice2);
 		
-		PrescriberByPracticeEntity prescriber2 = PrescriberByPracticeEntity.builder()
-				.addressLine1(practice1.getAddressLine1())
-				.practiceName(practice1.getAddressLine2())
-				.postCode(practice1.getPostCode())
-				.addressLine2(practice1.getAddressLine2())
-				.town(practice1.getTown())
-				.region(practice1.getRegion())
-				.country(practice1.getCountry())
+		System.out.println("Practices in Leicestershire with ODS code " + practice1Codes.get("ODS"));
+		System.out.println(practiceService.getPracticeForRegionAndCode("Leicestershire", "ODS", practice1Codes.get("ODS")));
+		
+		Map<String, String> prescriber1Codes = new HashMap<String, String>();
+		practice2Codes.put("GMC", "984032983");
+		practice2Codes.put("ODS", "KL9083409");
+		practice2Codes.put("SDS", "348208430298");
+
+		PrescriberDTO prescriber1 = PrescriberDTO.builder()
+					.firstName("Dr Hannibal")
+					.secondName("Lector")
+					.id(UUID.randomUUID())
+					.codes(prescriber1Codes)
+					.build();
+		prescriberRepoService.addPractice(prescriber1, practice2);
+		prescriberRepoService.addPractice(prescriber1, practice1);		
+
+		
+		Map<String, String> prescriber2Codes = new HashMap<String, String>();
+		practice2Codes.put("GMC", "0980982340");
+		practice2Codes.put("ODS", "LH03990809");
+		practice2Codes.put("SDS", "98098340928");
+
+		PrescriberDTO prescriber2 = PrescriberDTO.builder()
 				.firstName("Dr R K")
 				.secondName("Hirani")
-				.practiceId(practice1.getId())
 				.id(UUID.randomUUID())
+				.codes(prescriber2Codes)
 				.build();
 
-		prescriberRepo.save(prescriber2);
+		prescriberRepoService.addPractice(prescriber2, practice1);
 		
+		System.out.println("All Prescribers in " + practice1.getPracticeName());
+		prescriberRepoService.getPractice(practice1.getId()).getPrescribers().forEach(System.out::println);
+		
+		System.out.println("All Prescribers in " + practice2.getPracticeName());
+		prescriberRepoService.getPractice(practice2.getId()).getPrescribers().forEach(System.out::println);
+
+		Map<String, String> p1Codes = new HashMap<String, String>();
+		p1Codes.put("NI", "NW328600C");
+		p1Codes.put("NHS", "A6709JU12");
+	
 		PatientDTO p1 = PatientDTO.builder()
 				.id(UUID.randomUUID())
 				.firstName("Richard")
@@ -127,10 +157,15 @@ public class Application implements CommandLineRunner{
 						.postCode("LE7 7LT")
 						.build()
 				)
+				.codes(p1Codes)
 				.build();
 
 		patientService.save(p1);
 		
+		Map<String, String> p2Codes = new HashMap<String, String>();
+		p2Codes.put("NI", "AA758943L");
+		p2Codes.put("NHS", "A93L0200");
+
 		PatientDTO p2 = PatientDTO.builder()
 				.id(UUID.randomUUID())
 				.firstName("Merle")
@@ -145,6 +180,7 @@ public class Application implements CommandLineRunner{
 						.postCode("LE7 7LT")
 						.build()
 				)
+				.codes(p2Codes)
 				.build();
 
 		patientService.save(p2);
@@ -152,6 +188,9 @@ public class Application implements CommandLineRunner{
 		System.out.println("All Patients in Leicestershire");
 		patientService.getAllPatientsForRegion("Leicestershire").forEach(System.out::println);
 
+		System.out.println("Patient in Leicestershire with NI code " + p1Codes.get("NI"));
+		System.out.println(patientService.getPatientForRegionAndCode("Leicestershire", "NI", p1Codes.get("NI")));
+		
 		StoreByRegionEntity store1 = StoreByRegionEntity.builder()
 				.storeId(UUID.randomUUID())
 				.region("Leicestershire")
@@ -185,8 +224,8 @@ public class Application implements CommandLineRunner{
 				.prescriberId(prescriber1.getId())
 				.prescriberFirstName(prescriber1.getFirstName())
 				.prescriberSecondName(prescriber1.getSecondName())
-				.prescriberPracticeId(prescriber1.getPracticeId())
-				.prescriberPracticeName(prescriber1.getPracticeName())
+				.prescriberPracticeId(prescriber1.getPractice().get(0).getId())
+				.prescriberPracticeName(prescriber1.getPractice().get(0).getPracticeName())
 				.prescriptionDate(LocalDateTime.now())
 				.build();
 		
@@ -200,8 +239,8 @@ public class Application implements CommandLineRunner{
 				.prescriberId(prescriber1.getId())
 				.prescriberFirstName(prescriber1.getFirstName())
 				.prescriberSecondName(prescriber1.getSecondName())
-				.prescriberPracticeId(prescriber1.getPracticeId())
-				.prescriberPracticeName(prescriber1.getPracticeName())
+				.prescriberPracticeId(prescriber1.getPractice().get(1).getId())
+				.prescriberPracticeName(prescriber1.getPractice().get(1).getPracticeName())
 				.prescriptionDate(LocalDateTime.of(2013, 8, 30, 15, 30))
 				.build();
 
@@ -215,8 +254,8 @@ public class Application implements CommandLineRunner{
 				.prescriberId(prescriber2.getId())
 				.prescriberFirstName(prescriber2.getFirstName())
 				.prescriberSecondName(prescriber2.getSecondName())
-				.prescriberPracticeId(prescriber2.getPracticeId())
-				.prescriberPracticeName(prescriber2.getPracticeName())
+				.prescriberPracticeId(prescriber2.getPractice().get(0).getId())
+				.prescriberPracticeName(prescriber2.getPractice().get(0).getPracticeName())
 				.prescriptionDate(LocalDateTime.now())
 				.build();
 		
@@ -230,8 +269,8 @@ public class Application implements CommandLineRunner{
 				.prescriberId(prescriber1.getId())
 				.prescriberFirstName(prescriber1.getFirstName())
 				.prescriberSecondName(prescriber1.getSecondName())
-				.prescriberPracticeId(prescriber1.getPracticeId())
-				.prescriberPracticeName(prescriber1.getPracticeName())
+				.prescriberPracticeId(prescriber1.getPractice().get(0).getId())
+				.prescriberPracticeName(prescriber1.getPractice().get(0).getPracticeName())
 				.prescriptionDate(LocalDateTime.now())
 				.build();
 		
@@ -255,10 +294,10 @@ public class Application implements CommandLineRunner{
 		pr.delete(e4);
 		patientService.delete(p1);
 		patientService.delete(p2);
-		prescriberRepo.delete(prescriber1);
-		prescriberRepo.delete(prescriber2);
-		practiceRepo.delete(practice1);
-		practiceRepo.delete(practice2);
+		prescriberRepoService.deletePrescriber(prescriber1);
+		prescriberRepoService.deletePrescriber(prescriber2);
+		practiceService.delete(practice1);
+		practiceService.delete(practice2);
 		storeRepo.delete(store2);
 		storeRepo.delete(store1);
 	}
