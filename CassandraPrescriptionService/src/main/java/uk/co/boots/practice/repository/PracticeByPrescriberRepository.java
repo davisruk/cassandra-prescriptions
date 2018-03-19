@@ -9,4 +9,5 @@ import uk.co.boots.practice.entity.PracticeByPrescriberEntity;
 
 public interface PracticeByPrescriberRepository extends CassandraRepository<PracticeByPrescriberEntity, UUID>{
 	public List<PracticeByPrescriberEntity> findByPrescriberId(UUID id);
+	public PracticeByPrescriberEntity findByPrescriberIdAndPracticeNameAndPracticeId(UUID prescriberId, String practiceName, UUID practiceId);
 }

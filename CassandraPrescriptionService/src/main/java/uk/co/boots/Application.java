@@ -18,8 +18,6 @@ import uk.co.boots.patient.service.PatientRepositoryService;
 import uk.co.boots.practice.dto.PracticeDTO;
 import uk.co.boots.practice.service.PracticeRepositoryService;
 import uk.co.boots.prescriber.dto.PrescriberDTO;
-import uk.co.boots.prescriber.entity.PrescriberByPracticeEntity;
-import uk.co.boots.prescriber.repository.PrescriberByPracticeRepository;
 import uk.co.boots.prescriber.service.PrescriberRepositoryService;
 import uk.co.boots.prescription.entity.PrescriptionByDateEntity;
 import uk.co.boots.prescription.repository.PrescriptionByPatientRepository;
@@ -117,8 +115,6 @@ public class Application implements CommandLineRunner{
 					.build();
 		prescriberRepoService.addPractice(prescriber1, practice2);
 		prescriberRepoService.addPractice(prescriber1, practice1);		
-		practiceRepoService.addPrescriber(practice2, prescriber1);
-		practiceRepoService.addPrescriber(practice1, prescriber1);
 		
 		Map<String, String> prescriber2Codes = new HashMap<String, String>();
 		prescriber2Codes.put("GMC", "0980982340");
@@ -133,7 +129,6 @@ public class Application implements CommandLineRunner{
 				.build();
 
 		prescriberRepoService.addPractice(prescriber2, practice1);
-		practiceRepoService.addPrescriber(practice1, prescriber2);
 		
 		System.out.println("All Prescribers in " + practice1.getPracticeName());
 		practiceRepoService.getPractice(practice1.getId()).getPrescribers().forEach(System.out::println);

@@ -164,3 +164,13 @@ CREATE TABLE prescriptions.prescription_by_prescriber(
  )
  WITH CLUSTERING ORDER BY (prescription_date DESC);
  
+TRUNCATE prescriptions.patient_by_region;
+TRUNCATE prescriptions.practice_by_region;
+TRUNCATE prescriptions.prescription_by_store;
+TRUNCATE prescriptions.prescription_by_date;
+TRUNCATE prescriptions.prescription_by_patient;
+TRUNCATE prescriptions.prescription_by_prescriber;
+TRUNCATE prescriptions.practice_by_prescriber;
+TRUNCATE prescriptions.prescriber_by_practice;
+TRUNCATE prescriptions.store_by_region;
+ 

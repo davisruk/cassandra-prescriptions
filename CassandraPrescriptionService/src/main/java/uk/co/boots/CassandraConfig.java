@@ -15,6 +15,9 @@ import org.springframework.data.cassandra.repository.query.CassandraEntityInform
 import org.springframework.data.cassandra.repository.support.MappingCassandraEntityInformation;
 
 import lombok.Getter;
+import uk.co.boots.prescriber.entity.PrescriberByPracticeEntity;
+import uk.co.boots.prescriber.repository.PrescriberPracticeBatchRepository;
+import uk.co.boots.prescriber.repository.PrescriberPracticeBatchRepositoryImpl;
 import uk.co.boots.prescription.entity.PrescriptionByDateEntity;
 import uk.co.boots.prescription.repository.PrescriptionRepository;
 import uk.co.boots.prescription.repository.PrescriptionRepositoryImpl;
@@ -52,20 +55,19 @@ public class CassandraConfig extends AbstractCassandraConfiguration {
 		return new PrescriptionRepositoryImpl(metadata, cassandraTemplate);
 	}
 	
-/*
 	@Bean
-	public PracticeByPrescriberRepository practiceByPrescriberRepo(CassandraTemplate cassandraTemplate) {
+	public PrescriberPracticeBatchRepository practiceByPrescriberRepo(CassandraTemplate cassandraTemplate) {
 		CassandraPersistentEntity<?> entity = cassandraTemplate
 												.getConverter()
 												.getMappingContext()
-												.getRequiredPersistentEntity(PracticeByPrescriberEntity.class);
-		CassandraEntityInformation<PracticeByPrescriberEntity, UUID> metadata = new MappingCassandraEntityInformation<>(
-																	(CassandraPersistentEntity<PracticeByPrescriberEntity>) entity,
+												.getRequiredPersistentEntity(PrescriberByPracticeEntity.class);
+		CassandraEntityInformation<PrescriberByPracticeEntity, UUID> metadata = new MappingCassandraEntityInformation<>(
+																	(CassandraPersistentEntity<PrescriberByPracticeEntity>) entity,
 																	cassandraTemplate.getConverter()
 																	);
-		return new PracticeByPrescriberRepositoryImpl(metadata, cassandraTemplate);
+		return new PrescriberPracticeBatchRepositoryImpl(metadata, cassandraTemplate);
 	}
-*/
+
 	private static final Logger log = Logger.getLogger(CassandraConfig.class.getName());
 
 	

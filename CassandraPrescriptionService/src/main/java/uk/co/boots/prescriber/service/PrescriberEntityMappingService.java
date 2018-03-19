@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import uk.co.boots.common.Address;
 import uk.co.boots.practice.dto.PracticeDTO;
+import uk.co.boots.practice.entity.PracticeByPrescriberEntity;
 import uk.co.boots.prescriber.dto.PrescriberDTO;
 import uk.co.boots.prescriber.entity.PrescriberByPracticeEntity;
 
@@ -55,6 +56,24 @@ public class PrescriberEntityMappingService {
 		prescribers.forEach(prescriber -> practice.getPrescribers().add(toPrescriberDTO(prescriber)));
 		return practice;
 		
+	}
+	
+	public PracticeByPrescriberEntity toPracticeByPrescriberEntity(PrescriberByPracticeEntity pbp) {
+		return PracticeByPrescriberEntity.builder()
+				.addressLine1(pbp.getAddressLine1())
+				.addressLine2(pbp.getAddressLine2())
+				.addressLine3(pbp.getAddressLine3())
+				.country(pbp.getCountry())
+				.region(pbp.getRegion())
+				.prescriberId(pbp.getPrescriberId())
+				.firstName(pbp.getFirstName())
+				.secondName(pbp.getSecondName())
+				.practiceCodes(pbp.getPracticeCodes())
+				.postCode(pbp.getPostCode())
+				.practiceId(pbp.getPracticeId())
+				.practiceName(pbp.getPracticeName())
+				.town(pbp.getTown())
+				.build();
 	}
 
 	public PrescriberDTO toPrescriberDTO (PrescriberByPracticeEntity entity) {

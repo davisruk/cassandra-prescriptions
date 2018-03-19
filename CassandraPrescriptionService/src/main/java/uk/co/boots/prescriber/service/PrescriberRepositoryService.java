@@ -13,6 +13,7 @@ import uk.co.boots.practice.repository.PracticeByPrescriberRepository;
 import uk.co.boots.practice.service.PracticeEntityMappingService;
 import uk.co.boots.prescriber.dto.PrescriberDTO;
 import uk.co.boots.prescriber.repository.PrescriberByPracticeRepository;
+import uk.co.boots.prescriber.repository.PrescriberPracticeBatchRepository;
 
 @Service
 public class PrescriberRepositoryService {
@@ -25,12 +26,12 @@ public class PrescriberRepositoryService {
 	PracticeByPrescriberRepository practiceRepo;
 	@Autowired
 	PracticeEntityMappingService practiceMapper;
-	
+	@Autowired
+	PrescriberPracticeBatchRepository prescriberPracticeRepo;
+
+
 	public PrescriberDTO addPractice (PrescriberDTO prescriber, PracticeDTO practice) {
-		// PrescriberByPracticeRepository will have to change to a class and extend
-		// the Spring CassandraRepository as eventually PracticeByPrescriber will also
-		// need to persist this in a batch operation
-		prescriberRepo.save(prescriberMapper.toPrescriberByPracticeEntity(prescriber, practice));
+		prescriberPracticeRepo.save(prescriberMapper.toPrescriberByPracticeEntity(prescriber, practice));
 		if (prescriber.getPractice() == null)
 			prescriber.setPractice(new ArrayList<PracticeDTO>());
 		prescriber.getPractice().add(practice);
@@ -38,7 +39,7 @@ public class PrescriberRepositoryService {
 	}
 	
 	public void deletePrescriber(PrescriberDTO dto) {
-		dto.getPractice().forEach(practice -> prescriberRepo.delete(prescriberMapper.toPrescriberByPracticeEntity(dto, practice)));
+		dto.getPractice().forEach(practice -> prescriberPracticeRepo.delete(prescriberMapper.toPrescriberByPracticeEntity(dto, practice)));
 	}
 	
 	public PrescriberDTO getPrescriber(UUID id) {
