@@ -1,4 +1,4 @@
-package uk.co.boots.prescriber.respository;
+package uk.co.boots.prescriber.repository;
 
 import java.util.List;
 import java.util.UUID;

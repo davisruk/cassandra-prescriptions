@@ -65,6 +65,7 @@ public class PrescriberEntityMappingService {
 				.codes(entity.getPrescriberCodes())
 				.build();
 	}
+
 	public List<PrescriberByPracticeEntity> toPrescriberByPracticeEntity (List<PrescriberDTO> dtoList){
 		// totally wrong - only here to get compilation success 
 		return dtoList.stream().map(x -> toPrescriberByPracticeEntity(x, x.getPractice().get(0))).collect(Collectors.toList());

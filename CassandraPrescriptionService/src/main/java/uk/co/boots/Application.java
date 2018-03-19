@@ -19,7 +19,7 @@ import uk.co.boots.practice.dto.PracticeDTO;
 import uk.co.boots.practice.service.PracticeRepositoryService;
 import uk.co.boots.prescriber.dto.PrescriberDTO;
 import uk.co.boots.prescriber.entity.PrescriberByPracticeEntity;
-import uk.co.boots.prescriber.respository.PrescriberByPracticeRepository;
+import uk.co.boots.prescriber.repository.PrescriberByPracticeRepository;
 import uk.co.boots.prescriber.service.PrescriberRepositoryService;
 import uk.co.boots.prescription.entity.PrescriptionByDateEntity;
 import uk.co.boots.prescription.repository.PrescriptionByPatientRepository;
@@ -46,7 +46,7 @@ public class Application implements CommandLineRunner{
 	@Autowired
 	StoreByRegionRepository storeRepo;
 	@Autowired
-	PracticeRepositoryService practiceService;
+	PracticeRepositoryService practiceRepoService;
 	@Autowired
 	PatientRepositoryService patientService;
 	@Autowired
@@ -78,7 +78,7 @@ public class Application implements CommandLineRunner{
 						.build())
 				.build();
 		
-		practiceService.save(practice1);
+		practiceRepoService.save(practice1);
 		
 		Map<String, String> practice2Codes = new HashMap<String, String>();
 		practice2Codes.put("GMC", "98324739");
@@ -99,15 +99,15 @@ public class Application implements CommandLineRunner{
 						.build())
 				.build();
 
-		practiceService.save(practice2);
+		practiceRepoService.save(practice2);
 		
 		System.out.println("Practices in Leicestershire with ODS code " + practice1Codes.get("ODS"));
-		System.out.println(practiceService.getPracticeForRegionAndCode("Leicestershire", "ODS", practice1Codes.get("ODS")));
+		System.out.println(practiceRepoService.getPracticeForRegionAndCode("Leicestershire", "ODS", practice1Codes.get("ODS")));
 		
 		Map<String, String> prescriber1Codes = new HashMap<String, String>();
-		practice2Codes.put("GMC", "984032983");
-		practice2Codes.put("ODS", "KL9083409");
-		practice2Codes.put("SDS", "348208430298");
+		prescriber1Codes.put("GMC", "984032983");
+		prescriber1Codes.put("ODS", "KL9083409");
+		prescriber1Codes.put("SDS", "348208430298");
 
 		PrescriberDTO prescriber1 = PrescriberDTO.builder()
 					.firstName("Dr Hannibal")
@@ -117,12 +117,13 @@ public class Application implements CommandLineRunner{
 					.build();
 		prescriberRepoService.addPractice(prescriber1, practice2);
 		prescriberRepoService.addPractice(prescriber1, practice1);		
-
+		practiceRepoService.addPrescriber(practice2, prescriber1);
+		practiceRepoService.addPrescriber(practice1, prescriber1);
 		
 		Map<String, String> prescriber2Codes = new HashMap<String, String>();
-		practice2Codes.put("GMC", "0980982340");
-		practice2Codes.put("ODS", "LH03990809");
-		practice2Codes.put("SDS", "98098340928");
+		prescriber2Codes.put("GMC", "0980982340");
+		prescriber2Codes.put("ODS", "LH03990809");
+		prescriber2Codes.put("SDS", "98098340928");
 
 		PrescriberDTO prescriber2 = PrescriberDTO.builder()
 				.firstName("Dr R K")
@@ -132,12 +133,19 @@ public class Application implements CommandLineRunner{
 				.build();
 
 		prescriberRepoService.addPractice(prescriber2, practice1);
+		practiceRepoService.addPrescriber(practice1, prescriber2);
 		
 		System.out.println("All Prescribers in " + practice1.getPracticeName());
-		prescriberRepoService.getPractice(practice1.getId()).getPrescribers().forEach(System.out::println);
+		practiceRepoService.getPractice(practice1.getId()).getPrescribers().forEach(System.out::println);
 		
 		System.out.println("All Prescribers in " + practice2.getPracticeName());
-		prescriberRepoService.getPractice(practice2.getId()).getPrescribers().forEach(System.out::println);
+		practiceRepoService.getPractice(practice2.getId()).getPrescribers().forEach(System.out::println);
+
+		System.out.println("All Practices for " + prescriber1.getFirstName() + " " + prescriber1.getSecondName());
+		prescriberRepoService.getPrescriber(prescriber1.getId()).getPractice().forEach(System.out::println);
+		
+		System.out.println("All Practices for " + prescriber2.getFirstName() + " " + prescriber2.getSecondName());
+		prescriberRepoService.getPrescriber(prescriber2.getId()).getPractice().forEach(System.out::println);
 
 		Map<String, String> p1Codes = new HashMap<String, String>();
 		p1Codes.put("NI", "NW328600C");
@@ -296,8 +304,8 @@ public class Application implements CommandLineRunner{
 		patientService.delete(p2);
 		prescriberRepoService.deletePrescriber(prescriber1);
 		prescriberRepoService.deletePrescriber(prescriber2);
-		practiceService.delete(practice1);
-		practiceService.delete(practice2);
+		practiceRepoService.delete(practice1);
+		practiceRepoService.delete(practice2);
 		storeRepo.delete(store2);
 		storeRepo.delete(store1);
 	}
