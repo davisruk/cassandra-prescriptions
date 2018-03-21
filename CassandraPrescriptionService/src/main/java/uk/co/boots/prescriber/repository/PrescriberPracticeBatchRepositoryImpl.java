@@ -11,7 +11,9 @@ import org.springframework.data.cassandra.core.CassandraTemplate;
 import org.springframework.data.cassandra.repository.query.CassandraEntityInformation;
 import org.springframework.data.cassandra.repository.support.SimpleCassandraRepository;
 
+import uk.co.boots.practice.entity.PracticeByRegionEntity;
 import uk.co.boots.practice.repository.PracticeByPrescriberRepository;
+import uk.co.boots.practice.repository.PracticeByRegionRepository;
 import uk.co.boots.prescriber.entity.PrescriberByPracticeEntity;
 import uk.co.boots.prescriber.service.PrescriberEntityMappingService;
 
@@ -22,7 +24,9 @@ public class PrescriberPracticeBatchRepositoryImpl extends SimpleCassandraReposi
 	@Autowired
 	PrescriberEntityMappingService mapper;
 	@Autowired
-	PracticeByPrescriberRepository practiceRepo;
+	PracticeByPrescriberRepository practiceByPrescriberRepo;
+	@Autowired
+	PracticeByRegionRepository practiceByRegionRepo;
 	
 	public PrescriberPracticeBatchRepositoryImpl(CassandraEntityInformation<PrescriberByPracticeEntity, UUID> metadata,
 			CassandraOperations operations) {
@@ -59,13 +63,12 @@ public class PrescriberPracticeBatchRepositoryImpl extends SimpleCassandraReposi
 	@Override
 	public void delete (PrescriberByPracticeEntity p) {
 		CassandraBatchOperations batchOps = cassandraTemplate.batchOps();
-		deleteByPractice(p, batchOps);
-		batchOps.delete(p);
+		delete(p, batchOps);
 		batchOps.execute();
 	}
 
 	private void deleteByPractice(PrescriberByPracticeEntity p, CassandraBatchOperations batchOps) {
-		batchOps.delete(practiceRepo.findByPrescriberIdAndPracticeNameAndPracticeId(p.getPrescriberId(), p.getPracticeName(), p.getPracticeId()));
+		batchOps.delete(practiceByPrescriberRepo.findByPrescriberIdAndPracticeNameAndPracticeId(p.getPrescriberId(), p.getPracticeName(), p.getPracticeId()));
 	}
 	
 	@Override
@@ -75,12 +78,34 @@ public class PrescriberPracticeBatchRepositoryImpl extends SimpleCassandraReposi
 	
 	@Override
 	public void deleteAll(Iterable<? extends PrescriberByPracticeEntity> prescribers) {
-		prescribers.forEach(this::delete);
+		CassandraBatchOperations batchOps = cassandraTemplate.batchOps();
+		prescribers.forEach(p-> delete(p, batchOps));
+		batchOps.execute();		
 	}
 	
 	@Override
 	public void deleteAll() {
 		deleteAll(findAll());
 	}
-
+	
+	
+	// Deleting a PracticeByRegion should result in a deletion of entries in
+	// PracticeByRegion, PracticeByPrescriber and PrescriberByPractice
+	public void deleteAllIncludingPractice(List<? extends PrescriberByPracticeEntity> prescribers) {
+		if (prescribers == null || prescribers.size()==0)
+			return;
+		
+		PrescriberByPracticeEntity pbp = prescribers.get(0);
+		PracticeByRegionEntity pbr = practiceByRegionRepo.findByRegionAndPracticeNameAndId(pbp.getRegion(), pbp.getPracticeName(), pbp.getPracticeId());
+		CassandraBatchOperations batchOps = cassandraTemplate.batchOps();
+		batchOps.delete(pbr);
+		prescribers.forEach(p -> delete(p, batchOps));
+		batchOps.execute();
+	}
+	
+	private void delete (PrescriberByPracticeEntity p, CassandraBatchOperations batchOps) {
+		deleteByPractice(p, batchOps);
+		batchOps.delete(p);
+	}
+	
 }

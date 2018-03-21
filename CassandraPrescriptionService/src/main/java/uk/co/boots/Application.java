@@ -297,8 +297,6 @@ public class Application implements CommandLineRunner{
 		pr.delete(e4);
 		patientService.delete(p1);
 		patientService.delete(p2);
-		prescriberRepoService.deletePrescriber(prescriber1);
-		prescriberRepoService.deletePrescriber(prescriber2);
 		practiceRepoService.delete(practice1);
 		practiceRepoService.delete(practice2);
 		storeRepo.delete(store2);

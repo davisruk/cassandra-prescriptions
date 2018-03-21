@@ -45,6 +45,5 @@ public class PrescriberRepositoryService {
 	public PrescriberDTO getPrescriber(UUID id) {
 		List<PracticeByPrescriberEntity> practiceList = practiceRepo.findByPrescriberId(id);
 		return practiceMapper.toPrescriberDTOFromPracticeByPrescriberEntityList(practiceList);
-		
 	}
 }
