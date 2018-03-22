@@ -26,7 +26,10 @@ import uk.co.boots.prescriber.service.PrescriberEntityMappingService;
 import uk.co.boots.prescriber.service.PrescriberRepositoryService;
 import uk.co.boots.prescription.entity.PrescriptionByDateEntity;
 import uk.co.boots.prescription.service.PrescriptionMappingService;
-import uk.co.boots.store.entity.StoreByRegionEntity;
+import uk.co.boots.prescription.service.PrescriptionRepositoryService;
+import uk.co.boots.store.dto.StoreDTO;
+import uk.co.boots.store.service.StoreEntityMappingService;
+import uk.co.boots.store.service.StoreRepositoryService;
 
 @Getter
 @Configuration
@@ -85,6 +88,21 @@ public class CassandraTestConfig extends AbstractCassandraConfiguration{
 		return new PatientEntityMappingService();
 	}
 
+	@Bean 
+	public PrescriptionRepositoryService prescriptionRepoService() {
+		return new PrescriptionRepositoryService();
+	}
+	
+	@Bean 
+	public StoreEntityMappingService storeMapper() {
+		return new StoreEntityMappingService();
+	}
+
+	@Bean 
+	public StoreRepositoryService storeRepoServiceMapper() {
+		return new StoreRepositoryService();
+	}
+	
 	// Test Data
 	@Bean 
 	public PracticeDTO practice1() {
@@ -169,29 +187,37 @@ public class CassandraTestConfig extends AbstractCassandraConfiguration{
 	}
 	
 	@Bean
-	public StoreByRegionEntity store1() {
-		return StoreByRegionEntity.builder()
-			.storeId(UUID.randomUUID())
-			.region("Leicestershire")
-			.storeName("High Cross")
-			.addressLine1("38-39 Shires Lane")
-			.town("Leicester")
-			.postCode("LE1 4FQ")
-			.country("England")
-			.build();
+	public StoreDTO store1() {
+		return StoreDTO.builder()
+				.id(UUID.randomUUID())
+				.storeName("High Cross")
+				.address(Address.builder()
+						.addressLine1("38-39 Shires Lane")
+						.country("England")
+						.postCode("LE1 4FQ")
+						.region("Leicestershire")
+						.town("Leicester")
+						.build()
+				)
+				.build();
+		
 	}
 
 	@Bean
-	public StoreByRegionEntity store2() {
-		return StoreByRegionEntity.builder()
-			.storeId(UUID.randomUUID())
-			.region("Nottinghamshire")
-			.storeName("Riverside")
-			.addressLine1("Riverside Retail Park")
-			.town("Nottingham")
-			.postCode("NG2 1RU")
-			.country("England")
-			.build();
+	public StoreDTO store2() {
+		return StoreDTO.builder()
+				.id(UUID.randomUUID())
+				.storeName("Riverside")
+				.address(Address.builder()
+						.addressLine1("Riverside Retail Park")
+						.country("England")
+						.postCode("NG2 1RU")
+						.region("Nottinghamshire")
+						.town("Nottingham")
+						.build()
+				)
+				.build();
+				
 	}
 	
 	@Bean 
@@ -249,14 +275,14 @@ public class CassandraTestConfig extends AbstractCassandraConfiguration{
 	@Bean
 	public PrescriptionByDateEntity prescription1 () {
 		PatientDTO p1 = patient1();
-		StoreByRegionEntity store1 = store1();
+		StoreDTO store1 = store1();
 		PrescriberDTO prescriber1 = prescriber1();
 		return PrescriptionByDateEntity.builder()
 			.id(UUID.randomUUID())
 			.patientId(p1.getId())
 			.patientFirstName(p1.getFirstName())
 			.patientSecondName(p1.getSecondName())
-			.storeId(store1.getStoreId())
+			.storeId(store1.getId())
 			.storeName(store1.getStoreName())
 			.prescriberId(prescriber1.getId())
 			.prescriberFirstName(prescriber1.getFirstName())
@@ -269,14 +295,14 @@ public class CassandraTestConfig extends AbstractCassandraConfiguration{
 	@Bean
 	public PrescriptionByDateEntity prescription2 () {
 		PatientDTO p1 = patient1();
-		StoreByRegionEntity store2 = store2();
+		StoreDTO store2 = store2();
 		PrescriberDTO prescriber1 = prescriber1();
 		return PrescriptionByDateEntity.builder()
 			.id(UUID.randomUUID())
 			.patientId(p1.getId())
 			.patientFirstName(p1.getFirstName())
 			.patientSecondName(p1.getSecondName())
-			.storeId(store2.getStoreId())
+			.storeId(store2.getId())
 			.storeName(store2.getStoreName())
 			.prescriberId(prescriber1.getId())
 			.prescriberFirstName(prescriber1.getFirstName())
@@ -289,14 +315,14 @@ public class CassandraTestConfig extends AbstractCassandraConfiguration{
 	@Bean
 	public PrescriptionByDateEntity prescription3 () {
 		PatientDTO p2 = patient2();
-		StoreByRegionEntity store2 = store2();
+		StoreDTO store2 = store2();
 		PrescriberDTO prescriber2 = prescriber2();
 		return PrescriptionByDateEntity.builder()
 			.id(UUID.randomUUID())
 			.patientId(p2.getId())
 			.patientFirstName(p2.getFirstName())
 			.patientSecondName(p2.getSecondName())
-			.storeId(store2.getStoreId())
+			.storeId(store2.getId())
 			.storeName(store2.getStoreName())
 			.prescriberId(prescriber2.getId())
 			.prescriberFirstName(prescriber2.getFirstName())
@@ -309,14 +335,14 @@ public class CassandraTestConfig extends AbstractCassandraConfiguration{
 	@Bean
 	public PrescriptionByDateEntity prescription4 () {
 		PatientDTO p2 = patient2();
-		StoreByRegionEntity store2 = store2();
+		StoreDTO store2 = store2();
 		PrescriberDTO prescriber1 = prescriber1();
 		return PrescriptionByDateEntity.builder()		
 			.id(UUID.randomUUID())
 			.patientId(p2.getId())
 			.patientFirstName(p2.getFirstName())
 			.patientSecondName(p2.getSecondName())
-			.storeId(store2.getStoreId())
+			.storeId(store2.getId())
 			.storeName(store2.getStoreName())
 			.prescriberId(prescriber1.getId())
 			.prescriberFirstName(prescriber1.getFirstName())

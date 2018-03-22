@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import uk.co.boots.common.Address;
 import uk.co.boots.patient.dto.PatientDTO;
 import uk.co.boots.patient.entity.PatientByRegionEntity;
+import uk.co.boots.prescription.entity.PrescriptionByDateEntity;
 
 @Service
 public class PatientEntityMappingService {
@@ -53,7 +54,15 @@ public class PatientEntityMappingService {
 		return dtoList.stream().map(x -> toPatientByRegionEntity(x)).collect(Collectors.toList());
 	}
 	
-	public List<PatientDTO> toPatientDTO (List<PatientByRegionEntity> dtoList){
-		return dtoList.stream().map(x -> toPatientDTO(x)).collect(Collectors.toList());
+	public List<PatientDTO> toPatientDTO (List<PatientByRegionEntity> entityList){
+		return entityList.stream().map(x -> toPatientDTO(x)).collect(Collectors.toList());
+	}
+	
+	public PatientDTO toPatientDTO (PrescriptionByDateEntity pbde) {
+		return PatientDTO.builder()
+				.firstName(pbde.getPatientFirstName())
+				.id(pbde.getPatientId())
+				.secondName(pbde.getPatientSecondName())
+				.build();
 	}
 }

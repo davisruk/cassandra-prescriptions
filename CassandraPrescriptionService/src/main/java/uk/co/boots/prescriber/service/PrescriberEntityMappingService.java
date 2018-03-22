@@ -4,16 +4,22 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import uk.co.boots.common.Address;
 import uk.co.boots.practice.dto.PracticeDTO;
 import uk.co.boots.practice.entity.PracticeByPrescriberEntity;
+import uk.co.boots.practice.service.PracticeEntityMappingService;
 import uk.co.boots.prescriber.dto.PrescriberDTO;
 import uk.co.boots.prescriber.entity.PrescriberByPracticeEntity;
+import uk.co.boots.prescription.entity.PrescriptionByDateEntity;
 
 @Service
 public class PrescriberEntityMappingService {
+	@Autowired
+	PracticeEntityMappingService practiceMapper;
+	
 	public PrescriberByPracticeEntity toPrescriberByPracticeEntity (PrescriberDTO prescriberDTO, PracticeDTO practiceDTO) {
 		return PrescriberByPracticeEntity.builder()
 				.prescriberId(prescriberDTO.getId())
@@ -93,4 +99,22 @@ public class PrescriberEntityMappingService {
 	public List<PrescriberDTO> toPrescriberDTO (List<PrescriberByPracticeEntity> entityList){
 		return entityList.stream().map(x -> toPrescriberDTO(x)).collect(Collectors.toList());
 	}
+	
+	public PrescriberDTO toPrescriberDTO(PrescriptionByDateEntity pbde, int depth) {
+		
+		if (depth == 0)
+			return null;
+		ArrayList<PracticeDTO> prl = new ArrayList<PracticeDTO>() {
+			{
+				add(practiceMapper.toDTOFromPrescriptionByDateEntity(pbde, depth - 1));
+			}
+		};
+		return PrescriberDTO.builder()
+			.firstName(pbde.getPrescriberFirstName())
+			.id(pbde.getPrescriberId())
+			.secondName(pbde.getPrescriberSecondName())
+			.practice(prl)
+			.build();
+	}
+	
 }

@@ -12,8 +12,8 @@ import uk.co.boots.practice.dto.PracticeDTO;
 import uk.co.boots.practice.entity.PracticeByPrescriberEntity;
 import uk.co.boots.practice.entity.PracticeByRegionEntity;
 import uk.co.boots.prescriber.dto.PrescriberDTO;
-import uk.co.boots.prescriber.entity.PrescriberByPracticeEntity;
 import uk.co.boots.prescriber.service.PrescriberEntityMappingService;
+import uk.co.boots.prescription.entity.PrescriptionByDateEntity;
 
 @Service
 public class PracticeEntityMappingService {
@@ -111,4 +111,19 @@ public class PracticeEntityMappingService {
 				.build();
 	}
 	
+	public PracticeDTO toDTOFromPrescriptionByDateEntity(PrescriptionByDateEntity pbde, int depth) {
+		if (depth == 0)
+			return null;
+		ArrayList<PrescriberDTO> prbl = new ArrayList<PrescriberDTO>() {
+			{
+				add(prescriberMapper.toPrescriberDTO(pbde, depth - 1));
+			}
+		};
+		return PracticeDTO.builder()
+			.practiceName(pbde.getPrescriberPracticeName())
+			.id(pbde.getPrescriberPracticeId())
+			.prescribers(prbl)
+			.build();
+
+	}
 }
