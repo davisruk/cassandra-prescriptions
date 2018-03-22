@@ -1,5 +1,6 @@
 package uk.co.boots.prescription.repository;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -26,10 +27,17 @@ public class PrescriptionRepositoryImpl extends SimpleCassandraRepository<Prescr
 	CassandraTemplate cassandraTemplate;
 	@Autowired
 	PrescriptionMappingService mapper;
+	@Autowired
+	PrescriptionByDateRepository prescriptionByDateRepo;
 	
 	public PrescriptionRepositoryImpl(CassandraEntityInformation<PrescriptionByDateEntity, UUID> metadata,
 			CassandraOperations operations) {
 		super(metadata, operations);
+	}
+
+	@Override
+	public List<PrescriptionByDateEntity> findByPrescriptionDate(LocalDateTime date) {
+		return prescriptionByDateRepo.findByPrescriptionDate(date);
 	}
 
 	@Override

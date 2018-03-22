@@ -34,7 +34,7 @@ targetCompatibility = 1.8
 
 dependencies {
 	compile('org.springframework.boot:spring-boot-starter-data-cassandra')
-	compile('org.springframework.boot:spring-boot-starter-web')
+	//compile('org.springframework.boot:spring-boot-starter-web')
 	testCompile('org.springframework.boot:spring-boot-starter-test')
 	testCompile('org.cassandraunit:cassandra-unit-spring:3.3.0.2')
     testImplementation 'junit:junit:4.12'

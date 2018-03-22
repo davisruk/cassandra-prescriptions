@@ -11,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.Profile;
+import org.springframework.test.context.ActiveProfiles;
 
 import uk.co.boots.common.Address;
 import uk.co.boots.patient.dto.PatientDTO;
@@ -28,9 +30,9 @@ import uk.co.boots.prescription.service.PrescriptionMappingService;
 import uk.co.boots.store.entity.StoreByRegionEntity;
 import uk.co.boots.store.repository.StoreByRegionRepository;
 
+@Profile({"!test", "prod"})
 @SpringBootApplication
 public class Application implements CommandLineRunner{
-
 	@Autowired
 	PrescriptionRepository pr;
 	@Autowired
