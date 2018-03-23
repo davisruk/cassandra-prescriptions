@@ -17,6 +17,7 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import uk.co.boots.config.RepoBeanConfig;
 import uk.co.boots.patient.dto.PatientDTO;
 import uk.co.boots.patient.service.PatientRepositoryService;
 import uk.co.boots.practice.dto.PracticeDTO;

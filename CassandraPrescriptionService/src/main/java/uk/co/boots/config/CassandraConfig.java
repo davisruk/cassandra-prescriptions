@@ -1,5 +1,9 @@
-package uk.co.boots;
+package uk.co.boots.config;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+import java.util.Arrays;
+import java.util.StringJoiner;
 import java.util.logging.Logger;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -54,7 +58,7 @@ public class CassandraConfig extends AbstractCassandraConfiguration {
 		return SchemaAction.CREATE_IF_NOT_EXISTS;
 	}
 
-/*
+
 	@Override
 	public String getContactPoints() {
 		StringJoiner sj = new StringJoiner(",");
@@ -73,7 +77,7 @@ public class CassandraConfig extends AbstractCassandraConfiguration {
 		System.out.println("All IP Addresses: " + sj.toString());
 		return sj.toString();
 	}
-*/
+
 	public static String getIpAddress(byte[] rawBytes) {
 		int i = 4;
 		String ipAddress = "";

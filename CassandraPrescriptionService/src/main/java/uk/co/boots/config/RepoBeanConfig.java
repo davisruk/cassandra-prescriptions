@@ -1,4 +1,4 @@
-package uk.co.boots;
+package uk.co.boots.config;
 
 import java.util.UUID;
 
@@ -18,7 +18,7 @@ import uk.co.boots.prescription.repository.PrescriptionRepository;
 import uk.co.boots.prescription.repository.PrescriptionRepositoryImpl;
 
 @Configuration
-@Profile({"test", "prod"})
+@Profile({"test", "prod", "dev"})
 public class RepoBeanConfig {
 
 	@Bean
