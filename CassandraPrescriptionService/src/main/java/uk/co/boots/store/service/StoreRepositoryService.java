@@ -19,6 +19,10 @@ public class StoreRepositoryService {
 		return storeMapper.toStoreDTO(sbrRepo.save(storeMapper.toStoreByRegionEntity(store)));
 	}
 	
+	public List<StoreDTO> save (List<StoreDTO> storeList) {
+		return storeMapper.toStoreDTO(sbrRepo.insert(storeMapper.toStoreByRegionEntity(storeList)));
+	}
+
 	public void delete (StoreDTO store) {
 		sbrRepo.delete(storeMapper.toStoreByRegionEntity(store));
 	}

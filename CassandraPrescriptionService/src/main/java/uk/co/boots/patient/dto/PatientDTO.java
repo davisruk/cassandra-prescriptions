@@ -4,13 +4,16 @@ import java.time.LocalDate;
 import java.util.Map;
 import java.util.UUID;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import uk.co.boots.common.Address;
-import uk.co.boots.common.PersistenceIndicator;
 
 @Data
 @Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class PatientDTO {
 	private UUID id;
 	private LocalDate lastInteraction;

@@ -1,0 +1,41 @@
+[
+  {
+    "id": "bfb36b39-2195-4333-941c-3b00dc38c724",
+    "storeName": "High Cross",
+    "address": {
+      "addressLine1": "38-39 Shires Lane",
+      "addressLine2": null,
+      "addressLine3": null,
+      "town": "Leicester",
+      "country": "England",
+      "postCode": "LE1 4FQ",
+      "region": "Leicestershire"
+    }
+  },
+  {
+    "id": "8001b6cf-c38b-498d-9fc8-29e011b70485",
+    "storeName": "Loughborough Market Place",
+    "address": {
+      "addressLine1": "11-13 Market Pl",
+      "addressLine2": null,
+      "addressLine3": null,
+      "town": "Loughborough ",
+      "country": "England",
+      "postCode": "LE11 3EQ",
+      "region": "Leicestershire"
+    }
+  },
+  {
+    "id": "4f21f026-d566-477d-b670-eb1fc3c198c1",
+    "storeName": "Riverside",
+    "address": {
+      "addressLine1": "Riverside Retail Park",
+      "addressLine2": null,
+      "addressLine3": null,
+      "town": "Nottingham",
+      "country": "England",
+      "postCode": "NG2 1RU",
+      "region": "Nottinghamshire"
+    }
+  }
+]
