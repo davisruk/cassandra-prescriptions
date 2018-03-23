@@ -7,6 +7,8 @@ import org.springframework.stereotype.Service;
 
 import uk.co.boots.patient.dto.PatientDTO;
 import uk.co.boots.patient.service.PatientEntityMappingService;
+import uk.co.boots.practice.dto.PracticeDTO;
+import uk.co.boots.prescriber.dto.PrescriberDTO;
 import uk.co.boots.prescriber.service.PrescriberEntityMappingService;
 import uk.co.boots.prescription.dto.PrescriptionDTO;
 import uk.co.boots.prescription.entity.PrescriptionByDateEntity;
@@ -137,6 +139,22 @@ public class PrescriptionMappingService {
 		return toDTOFromByDate(fromByStore(p));
 	}
 	
+	public List<PrescriptionDTO> toDTOFromByPatient(List<PrescriptionByPatientEntity> pl) {
+		return pl.stream().map(x -> toDTOFromByPatient(x)).collect(Collectors.toList());		
+	}
+
+	public PrescriptionDTO toDTOFromByPatient(PrescriptionByPatientEntity p) {
+		return toDTOFromByDate(fromByPatient(p));
+	}
+
+	public List<PrescriptionDTO> toDTOFromByPrescriber(List<PrescriptionByPrescriberEntity> pl) {
+		return pl.stream().map(x -> toDTOFromByPrescriber(x)).collect(Collectors.toList());		
+	}
+
+	public PrescriptionDTO toDTOFromByPrescriber(PrescriptionByPrescriberEntity p) {
+		return toDTOFromByDate(fromByPrescriber(p));
+	}
+
 	public PrescriptionDTO toDTOFromByDate(PrescriptionByDateEntity p) {
 		PatientDTO patientDTO = patientMapper.toPatientDTO(p);
 		StoreDTO storeDTO = storeMapper.toStoreDTO(p);
@@ -148,5 +166,31 @@ public class PrescriptionMappingService {
 									.issueDate(p.getPrescriptionDate())
 									.build();
 		return pDTO;
-	}	
+	}
+	
+	public List<PrescriptionDTO> toDTOFromByDate(List<PrescriptionByDateEntity> pl) {
+		return pl.stream().map(x -> toDTOFromByDate(x)).collect(Collectors.toList());		
+	}
+
+	public PrescriptionByDateEntity toByDateFromDTO(PrescriptionDTO p) {
+		PrescriberDTO prescriber = p.getPrescriber();
+		// only ever 1 practice for a PrescriptionByDateEntity, must always be first entry;
+		PracticeDTO practice = prescriber.getPractice().get(0);
+		PatientDTO patient = p.getPatient();
+		StoreDTO store = p.getStore();
+		return PrescriptionByDateEntity.builder()
+				.id(p.getId())
+				.patientFirstName(patient.getFirstName())
+				.patientSecondName(patient.getSecondName())
+				.patientId(patient.getId())
+				.prescriberId(prescriber.getId())
+				.prescriberPracticeId(practice.getId())
+				.prescriberPracticeName(practice.getPracticeName())
+				.prescriberFirstName(prescriber.getFirstName())
+				.prescriberSecondName(prescriber.getSecondName())
+				.prescriptionDate(p.getIssueDate())
+				.storeId(store.getId())
+				.storeName(store.getStoreName())
+				.build();
+	}
 }

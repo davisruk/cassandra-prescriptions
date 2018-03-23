@@ -24,6 +24,7 @@ import uk.co.boots.practice.service.PracticeRepositoryService;
 import uk.co.boots.prescriber.dto.PrescriberDTO;
 import uk.co.boots.prescriber.service.PrescriberEntityMappingService;
 import uk.co.boots.prescriber.service.PrescriberRepositoryService;
+import uk.co.boots.prescription.dto.PrescriptionDTO;
 import uk.co.boots.prescription.entity.PrescriptionByDateEntity;
 import uk.co.boots.prescription.service.PrescriptionMappingService;
 import uk.co.boots.prescription.service.PrescriptionRepositoryService;
@@ -273,82 +274,62 @@ public class CassandraTestConfig extends AbstractCassandraConfiguration{
 	}
 	
 	@Bean
-	public PrescriptionByDateEntity prescription1 () {
+	public PrescriptionDTO prescriptionDTO1 () {
 		PatientDTO p1 = patient1();
 		StoreDTO store1 = store1();
 		PrescriberDTO prescriber1 = prescriber1();
-		return PrescriptionByDateEntity.builder()
+		return PrescriptionDTO.builder()
 			.id(UUID.randomUUID())
-			.patientId(p1.getId())
-			.patientFirstName(p1.getFirstName())
-			.patientSecondName(p1.getSecondName())
-			.storeId(store1.getId())
-			.storeName(store1.getStoreName())
-			.prescriberId(prescriber1.getId())
-			.prescriberFirstName(prescriber1.getFirstName())
-			.prescriberSecondName(prescriber1.getSecondName())
-			.prescriptionDate(LocalDateTime.now())
-			// no prescriber practice details - must be set using the Repository Service addPractice method
+			.patient(p1)
+			.prescriber(prescriber1)
+			.store(store1)
+			.issueDate(LocalDateTime.now())
+			// no practice details - must be set using the Repository Service addPractice method
 			.build();
 	}
 	
 	@Bean
-	public PrescriptionByDateEntity prescription2 () {
-		PatientDTO p1 = patient1();
-		StoreDTO store2 = store2();
-		PrescriberDTO prescriber1 = prescriber1();
-		return PrescriptionByDateEntity.builder()
+	public PrescriptionDTO prescriptionDTO2 () {
+		PatientDTO p = patient1();
+		StoreDTO s = store2();
+		PrescriberDTO prescriber = prescriber1();
+		return PrescriptionDTO.builder()
 			.id(UUID.randomUUID())
-			.patientId(p1.getId())
-			.patientFirstName(p1.getFirstName())
-			.patientSecondName(p1.getSecondName())
-			.storeId(store2.getId())
-			.storeName(store2.getStoreName())
-			.prescriberId(prescriber1.getId())
-			.prescriberFirstName(prescriber1.getFirstName())
-			.prescriberSecondName(prescriber1.getSecondName())
-			.prescriptionDate(LocalDateTime.of(2013, 8, 30, 15, 30))
-			// no prescriber practice details - must be set using the Repository Service addPractice method			
+			.patient(p)
+			.prescriber(prescriber)
+			.store(s)
+			.issueDate(LocalDateTime.of(2013, 8, 30, 15, 30))
+			// no practice details - must be set using the Repository Service addPractice method
 			.build();
 	}
-	
-	@Bean
-	public PrescriptionByDateEntity prescription3 () {
-		PatientDTO p2 = patient2();
-		StoreDTO store2 = store2();
-		PrescriberDTO prescriber2 = prescriber2();
-		return PrescriptionByDateEntity.builder()
-			.id(UUID.randomUUID())
-			.patientId(p2.getId())
-			.patientFirstName(p2.getFirstName())
-			.patientSecondName(p2.getSecondName())
-			.storeId(store2.getId())
-			.storeName(store2.getStoreName())
-			.prescriberId(prescriber2.getId())
-			.prescriberFirstName(prescriber2.getFirstName())
-			.prescriberSecondName(prescriber2.getSecondName())
-			.prescriptionDate(LocalDateTime.now())
-			// no prescriber practice details - must be set using the Repository Service addPractice method			
-			.build();
-	}	
 
 	@Bean
-	public PrescriptionByDateEntity prescription4 () {
-		PatientDTO p2 = patient2();
-		StoreDTO store2 = store2();
-		PrescriberDTO prescriber1 = prescriber1();
-		return PrescriptionByDateEntity.builder()		
+	public PrescriptionDTO prescriptionDTO3 () {
+		PatientDTO p = patient2();
+		StoreDTO s = store2();
+		PrescriberDTO prescriber = prescriber2();
+		return PrescriptionDTO.builder()
 			.id(UUID.randomUUID())
-			.patientId(p2.getId())
-			.patientFirstName(p2.getFirstName())
-			.patientSecondName(p2.getSecondName())
-			.storeId(store2.getId())
-			.storeName(store2.getStoreName())
-			.prescriberId(prescriber1.getId())
-			.prescriberFirstName(prescriber1.getFirstName())
-			.prescriberSecondName(prescriber1.getSecondName())
-			.prescriptionDate(LocalDateTime.now())
-			// no prescriber practice details - must be set using the Repository Service addPractice method			
+			.patient(p)
+			.prescriber(prescriber)
+			.store(s)
+			.issueDate(LocalDateTime.now())
+			// no practice details - must be set using the Repository Service addPractice method
 			.build();
-	}	
+	}
+
+	@Bean
+	public PrescriptionDTO prescriptionDTO4 () {
+		PatientDTO p = patient2();
+		StoreDTO s = store2();
+		PrescriberDTO prescriber = prescriber1();
+		return PrescriptionDTO.builder()
+			.id(UUID.randomUUID())
+			.patient(p)
+			.prescriber(prescriber)
+			.store(s)
+			.issueDate(LocalDateTime.now())
+			// no practice details - must be set using the Repository Service addPractice method
+			.build();
+	}
 }

@@ -47,14 +47,6 @@ public class CassandraTest extends AbstractEmbeddedCassandraTest {
 	@Autowired
 	StoreRepositoryService storeRepoService;
 	@Autowired
-	PrescriptionByStoreRepository byStoreRepo;
-	@Autowired
-	PrescriptionByPatientRepository byPatientRepo;
-	@Autowired
-	PrescriptionByPrescriberRepository byPrescriberRepo;
-	@Autowired
-	PrescriptionRepository pr;
-	@Autowired
 	PracticeDTO practice1;
 	@Autowired
 	PracticeDTO practice2;
@@ -71,13 +63,13 @@ public class CassandraTest extends AbstractEmbeddedCassandraTest {
 	@Autowired
 	PatientDTO patient2;
 	@Autowired
-	PrescriptionByDateEntity prescription1;
+	PrescriptionDTO prescriptionDTO1;
 	@Autowired
-	PrescriptionByDateEntity prescription2;
+	PrescriptionDTO prescriptionDTO2;
 	@Autowired
-	PrescriptionByDateEntity prescription3;
+	PrescriptionDTO prescriptionDTO3;
 	@Autowired
-	PrescriptionByDateEntity prescription4;
+	PrescriptionDTO prescriptionDTO4;
 	
 	@Test
 	public void practiceTests() {
@@ -144,9 +136,9 @@ public class CassandraTest extends AbstractEmbeddedCassandraTest {
 		List<PrescriptionDTO> pl = prescriptionRepoService.getByStoreId(store2.getId());
 		assertThat(pl.size(), is(3));
 		assertThat(pl, hasItems(
-				hasProperty("id", is(prescription2.getId())),
-				hasProperty("id", is(prescription3.getId())),
-				hasProperty("id", is(prescription4.getId()))
+				hasProperty("id", is(prescriptionDTO2.getId())),
+				hasProperty("id", is(prescriptionDTO3.getId())),
+				hasProperty("id", is(prescriptionDTO4.getId()))
 			)
 		);
 
@@ -154,7 +146,7 @@ public class CassandraTest extends AbstractEmbeddedCassandraTest {
 		pl = prescriptionRepoService.getByStoreId(store1.getId());
 		assertThat(pl.size(), is(1));
 		assertThat(pl, hasItems(
-				hasProperty("id", is(prescription1.getId()))
+				hasProperty("id", is(prescriptionDTO1.getId()))
 			)
 		);
 		
@@ -162,7 +154,7 @@ public class CassandraTest extends AbstractEmbeddedCassandraTest {
 		pl = prescriptionRepoService.getByStoreIdAndPrescriptionDateLessThan(store2.getId(), LocalDateTime.of(LocalDate.now().minusDays(1), LocalTime.now()));
 		assertThat(pl.size(), is(1));
 		assertThat(pl, hasItems(
-				hasProperty("id", is(prescription2.getId()))
+				hasProperty("id", is(prescriptionDTO2.getId()))
 			)
 		);
 	}
@@ -175,10 +167,10 @@ public class CassandraTest extends AbstractEmbeddedCassandraTest {
 		insertPrescribers();
 		insertPrescriptions();
 
-		pr.delete(prescription1);
-		pr.delete(prescription2);
-		pr.delete(prescription3);
-		pr.delete(prescription4);
+		prescriptionRepoService.delete(prescriptionDTO1);
+		prescriptionRepoService.delete(prescriptionDTO2);
+		prescriptionRepoService.delete(prescriptionDTO3);
+		prescriptionRepoService.delete(prescriptionDTO4);
 		patientService.delete(patient1);
 		patientService.delete(patient2);
 		practiceRepoService.delete(practice1);
@@ -186,16 +178,16 @@ public class CassandraTest extends AbstractEmbeddedCassandraTest {
 		storeRepoService.delete(store2);
 		storeRepoService.delete(store1);
 		
-		assertThat (byStoreRepo.findByStoreId(store1.getId()).size(),is(0));
-		assertThat (byStoreRepo.findByStoreId(store2.getId()).size(),is(0));
-		assertThat (byPatientRepo.findByPatientId(patient1.getId()).size(),is(0));
-		assertThat (byPatientRepo.findByPatientId(patient2.getId()).size(),is(0));
-		assertThat (byPrescriberRepo.findByPrescriberId(prescriber1.getId()).size(),is(0));
-		assertThat (byPrescriberRepo.findByPrescriberId(prescriber2.getId()).size(),is(0));
-		assertThat (pr.findByPrescriptionDate(prescription1.getPrescriptionDate()).size(),is(0));
-		assertThat (pr.findByPrescriptionDate(prescription2.getPrescriptionDate()).size(),is(0));
-		assertThat (pr.findByPrescriptionDate(prescription3.getPrescriptionDate()).size(),is(0));
-		assertThat (pr.findByPrescriptionDate(prescription4.getPrescriptionDate()).size(),is(0));
+		assertThat (prescriptionRepoService.getByStoreId(store1.getId()).size(),is(0));
+		assertThat (prescriptionRepoService.getByStoreId(store2.getId()).size(),is(0));
+		assertThat (prescriptionRepoService.getByPatientId(patient1.getId()).size(),is(0));
+		assertThat (prescriptionRepoService.getByPatientId(patient2.getId()).size(),is(0));
+		assertThat (prescriptionRepoService.getByPrescriberId(prescriber1.getId()).size(),is(0));
+		assertThat (prescriptionRepoService.getByPrescriberId(prescriber2.getId()).size(),is(0));
+		assertThat (prescriptionRepoService.getByPrescriptionDate(prescriptionDTO1.getIssueDate()).size(),is(0));
+		assertThat (prescriptionRepoService.getByPrescriptionDate(prescriptionDTO2.getIssueDate()).size(),is(0));
+		assertThat (prescriptionRepoService.getByPrescriptionDate(prescriptionDTO3.getIssueDate()).size(),is(0));
+		assertThat (prescriptionRepoService.getByPrescriptionDate(prescriptionDTO4.getIssueDate()).size(),is(0));
 		assertThat (storeRepoService.getByRegion(store1.getAddress().getRegion()).size(), is(0));
 		assertThat (practiceRepoService.getAllPracticesForRegion(practice1.getAddress().getRegion()).size(), is(0));
 		assertThat (patientService.getAllPatientsForRegion(patient1.getAddress().getRegion()).size(), is(0));
@@ -223,10 +215,10 @@ public class CassandraTest extends AbstractEmbeddedCassandraTest {
 	}
 
 	private void insertPrescriptions() {
-		pr.save(prescription1);
-		pr.save(prescription2);
-		pr.save(prescription3);
-		pr.save(prescription4);
+		prescriptionRepoService.save(prescriptionDTO1);
+		prescriptionRepoService.save(prescriptionDTO2);
+		prescriptionRepoService.save(prescriptionDTO3);
+		prescriptionRepoService.save(prescriptionDTO4);
 	}
 	
 }
